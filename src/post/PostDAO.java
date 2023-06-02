@@ -233,6 +233,8 @@ public class PostDAO {
 			
 			String SQL2 = "update posts set postIndex = ROWNUM where roomID=? AND postType=?";    //ÀçÁ¤·Ä
 			PreparedStatement pstmt2 = conn.prepareStatement(SQL2);
+			pstmt2.setInt(1, roomID);
+			pstmt2.setString(2, postType);
 			
 			return pstmt2.executeUpdate();
 			

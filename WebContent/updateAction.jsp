@@ -1,14 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
+<%@ page import="post.Post" %>
 <%@ page import="post.PostDAO" %>  
 <%@ page import="java.io.PrintWriter" %>  
 <% request.setCharacterEncoding("UTF-8"); %>
-<jsp:useBean id="post" class="post.Post" scope="page" />   <!-- 자바빈즈 사용, 현재 페이지안에서만 빈즈사용-->
-<jsp:setProperty name="post" property="postTitle"/>		<!-- 로그인페이지에서 넘겨준 유저아이디를 받아서 한명의 사용자에 유저아이디를 넣어줌 -->
-<jsp:setProperty name="post" property="postContent"/>
-<jsp:setProperty name="post" property="roomID"/>
-<jsp:setProperty name="post" property="postType"/>
 
 <!DOCTYPE html>
 <html>
@@ -34,9 +30,44 @@
 			script.println("location.href = 'login.jsp;'");
 			script.println("</script>");
 		}
-		else {  //로그인이 되어있다면
+		
+		
+		int roomID = -1;
+		String postType = null;
+		int postIndex=0;
+		
+		if (request.getParameter("roomID") != null && request.getParameter("postType") != null
+				&& request.getParameter("postIndex") != null){
+			roomID = Integer.parseInt(request.getParameter("roomID"));
+			postType = request.getParameter("postType");
+			postIndex = Integer.parseInt(request.getParameter("postIndex"));   
+			/* href 링크타고 올때 recruit_view.jsp?postIndex=<%= list.get(i).getPostIndex() ~~~~에서 postIndex받아옴 */
+		}
+		
+		
+		if (postIndex==0){
+			
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('유효하지 않은 글입니다.')");
+			script.println("location.href='main.jsp'");
+			script.println("</script>");			
+			
+		}
+		
+		Post post = new PostDAO().getPost(roomID, postType, postIndex);   //수정할 포스트 객체 가져옴
+		
+		if(!userID.equals(post.getUserID())){
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('권한이 없습니다.')");
+			script.println("location.href='main.jsp'");
+			script.println("</script>");
+		}
+		
+		else {  //권한이 있다면 수정
 
-			if (post.getPostTitle() == null || post.getPostContent() == null ) {
+			if (request.getParameter("postTitle") == null || request.getParameter("postContent") == null ) {
 				PrintWriter script = response.getWriter();
 				script.println("<script>");
 				script.println("alert('입력되지 않은 사항이 있습니다.')");
@@ -46,18 +77,19 @@
 			else {
 
 				PostDAO postDAO = new PostDAO();    //db에 접근 가능한 객체를 하나 만들어서
-				//write(int roomID, String postType, String postTitle, String userID, String postContent, String userName)
 				
-				int result = postDAO.write(post.getRoomID(), post.getPostType(), post.getPostTitle(), userID, post.getPostContent(), userName);   //write함수 실행
+				//int update(int roomID, String postType, int postIndex, String postTitle, String postContent) 
+				
+				int result = postDAO.update(roomID, postType, postIndex, request.getParameter("postTitle"), request.getParameter("postContent"));   //update 함수 실행
 					
 				if(result == -1) {   //db오류
 					PrintWriter script = response.getWriter();
 					script.println("<script>");
-					script.println("alert('글쓰기에 실패했습니다.')");
+					script.println("alert('글 수정에 실패했습니다.')");
 					script.println("history.back();");
 					script.println("</script>");
 				}
-				else {   //글쓰기 성공
+				else {   //글수정 성공
 					if (post.getRoomID()==0){   //모집게시판이면
 						PrintWriter script = response.getWriter();
 						script.println("<script>");

@@ -37,7 +37,7 @@
 			userName=(String) session.getAttribute("userName");
 		}
 		
-		int roomID = 0; // roomID 0번은 모집게시판 의미. 기본으로 설정
+		int roomID = 0; // roomID 0번은 모집게시판 의미.
 		String postType = "모집게시판";
 		
 		int pageNumber = 1; //기본 페이지 의미
@@ -88,7 +88,7 @@
 
     <div class="d-flex">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: calc(100vh - 75px);">
-            <a href="recruitment.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none" style="padding: 20px;">
+            <a href="recruitBBS.jsp" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none" style="padding: 20px;">
                 <span class="fs-4">모집게시판</span>
             </a>
         </div>
@@ -121,7 +121,7 @@
 			                        %>		
 			                        <tr>
 			                        	<td><%= list.get(i).getPostIndex()%></td>
-			                        	<td><a href="view.jsp?postIndex=<%= list.get(i).getPostIndex()%>&roomID=<%= list.get(i).getRoomID()%>&postType=<%= list.get(i).getPostType()%>"><%=list.get(i).getPostTitle() %></a></td>
+			                        	<td><a href="recruit_view.jsp?postIndex=<%= list.get(i).getPostIndex()%>&roomID=<%= list.get(i).getRoomID()%>&postType=<%= list.get(i).getPostType()%>"><%=list.get(i).getPostTitle() %></a></td>
 			                        	<td><%= list.get(i).getUserName()%></td>
 			                        	<td><%= list.get(i).getPostDate()%></td>
 			                        </tr>
@@ -131,20 +131,22 @@
 			
 			                    </tbody>			
 						</table>
+						<div class="d-flex justify-content-between">
 						<%
 							if (pageNumber!=1) { //1페이지가 아니라면 이전버튼 필요
 						%>
-						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber-1%>" class="btn btn-success btn-arraw-left">이전</a>
+						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber-1%>" class="btn btn-secondary" style="width:70px;">이전</a>
 						<%
 							} if(postDAO.nextPage(roomID, postType, pageNumber+1)){  //다음페이지가 존재한다면
 						%>
-						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber+1%>" class="btn btn-success btn-arraw-right">다음</a>
+						<span></span>
+						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber+1%>" class="btn btn-secondary" style="width:70px;">다음</a>
 						<%
 							}
 						%>
+						</div>
 						
-						
-						<div class="text-end">
+						<div class="text-end" style="padding-top:10px">
 							<a href="write.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary" role="button">글쓰기</a>
 						</div>
 					</div>

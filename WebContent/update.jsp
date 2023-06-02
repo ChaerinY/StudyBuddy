@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+
+<%@ page import="post.PostDAO" %>  
+<%@ page import="post.Post" %>
 <%@ page import="java.io.PrintWriter" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,17 +46,34 @@
 		
 		int roomID = -1;
 		String postType = null;
+		int postIndex=0;
 		
-		if (request.getParameter("roomID") != null && request.getParameter("postType") != null){
+		if (request.getParameter("roomID") != null && request.getParameter("postType") != null
+				&& request.getParameter("postIndex") != null){
 			roomID = Integer.parseInt(request.getParameter("roomID"));
 			postType = request.getParameter("postType");
+			postIndex = Integer.parseInt(request.getParameter("postIndex"));   
+			/* href 링크타고 올때 recruit_view.jsp?postIndex=<%= list.get(i).getPostIndex() ~~~~에서 postIndex받아옴 */
 		}
 		
-		if(roomID == -1 || postType == null){  
+		
+		if (postIndex==0){
+			
 			PrintWriter script = response.getWriter();
 			script.println("<script>");
-			script.println("alert('잘못된 접근입니다.')");
-			script.println("location.href = 'main.jsp;'");  
+			script.println("alert('유효하지 않은 글입니다.')");
+			script.println("location.href='main.jsp'");
+			script.println("</script>");			
+			
+		}
+		
+		Post post = new PostDAO().getPost(roomID, postType, postIndex);   //현재 수정하려는 post객체 가져오기
+		
+		if(!userID.equals(post.getUserID())){
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('권한이 없습니다.')");
+			script.println("location.href='main.jsp'");
 			script.println("</script>");
 		}
 		
@@ -94,27 +113,28 @@
         <div class="container ms-3 mt-5" id="main">
 
             <div class="row">
-				<form method="post" action="writeAction.jsp">
+				<form method="post" action="updateAction.jsp">
 				<table class="table" style="text-align:center; border: 1px solid #dddddd">
 						<thead>
 	                        <tr>
-	                            <th style="background-color: #eeeeee; text-align: left; font-size:20pt">게시판 글쓰기</th>
+	                            <th style="background-color: #eeeeee; text-align: left; font-size:20pt">게시글 수정</th>
 	                            <input type="hidden" name="roomID" value="<%=roomID%>">         <!-- 룸아이디랑 카테고리 안보이게 전달 -->
     							<input type="hidden" name="postType" value="<%=postType%>">
+    							<input type="hidden" name="postIndex" value="<%=postIndex%>">
 	                        </tr>
 	                    </thead>
 	                    <tbody id="post-list">
 	                        <!-- 게시글양식이 들어갈 부분 -->
 	                        <tr>
-	                        	<td><input type="text" class="form-control" placeholder="글제목" name="postTitle" maxlength="50"></td>
+	                        	<td><input type="text" class="form-control" placeholder="글제목" name="postTitle" maxlength="50" value="<%=post.getPostTitle()%>"></td>
 	                        </tr>
 	                        <tr>
-	                        	<td><textarea class="form-control" placeholder="글내용" name="postContent" maxlength="2048"></textarea></td>
+	                        	<td><textarea class="form-control" placeholder="글내용" name="postContent" maxlength="2048"><%=post.getPostContent()%></textarea></td>
 	                        </tr>
 	                    </tbody>			
 				</table>
 					<div class="text-end">
-					<input type="submit" class="btn btn-primary" value="글쓰기">
+					<input type="submit" class="btn btn-primary" value="글수정">
 					</div>
 				</form>
 			</div>
