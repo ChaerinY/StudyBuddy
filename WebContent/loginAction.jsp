@@ -19,8 +19,11 @@
 	
 		//이미 로그인한 사람은 또다시 로그인 할 수 없도록
 		String userID = null;
+		String userName = null;
+		
 		if(session.getAttribute("userID")!= null){      //세션을 확인해서 userID의 세션이 존재하는 회원들은 userID에  세션값을 담을수 있도록
 			userID=(String) session.getAttribute("userID");
+			userName=(String) session.getAttribute("userName");
 		}
 		if(userID != null) {
 			PrintWriter script = response.getWriter();
@@ -36,6 +39,7 @@
 		if(result == 1) {   //로그인 성공
 			
 			session.setAttribute("userID", user.getUserID());   //세션을 부여, 해당회원의 아이디를 세션값으로 넣어줌 - 7강
+			session.setAttribute("userName", userDAO.searchName(user.getUserID()));
 			
 			PrintWriter script = response.getWriter();
 			script.println("<script>");

@@ -24,8 +24,10 @@
 
 	<% 
 		String userID = null;
+		String userName = null;
 		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값을 가짐.
 			userID=(String) session.getAttribute("userID");          //유저네임 세션값 저장
+			userName=(String) session.getAttribute("userName");
 		}
 	
 	%>
@@ -42,7 +44,7 @@
     
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
               <li><a href="main.jsp" class="nav-link px-2 text-white">홈</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">모집게시판</a></li>
+              <li><a href="recruitBBS.jsp" class="nav-link px-2 text-white">모집게시판</a></li>
               <li><a href="#" class="nav-link px-2 text-white">나의스터디</a></li>
             </ul>
     

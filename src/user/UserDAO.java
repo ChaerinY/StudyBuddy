@@ -73,4 +73,23 @@ public class UserDAO {
 		return -1; //데이터베이스오류
 	}
 	
+	public String searchName(String userID) {
+		String SQL = "SELECT userName FROM userlist WHERE userID = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, userID);    // 첫번째자리 물음표에 userID 삽입
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				String name = rs.getString(1);
+				return name;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null; // 없거나 데이터베이스 오류
+	}
+	
 }
