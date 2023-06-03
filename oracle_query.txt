@@ -20,4 +20,19 @@
     CREATE SEQUENCE post_seq;
 
 
+추가로
+
+DAO 소스코드 내
+	String url="jdbc:oracle:thin:@localhost:1521";
+	String user ="RIN";
+	String password ="1004";
+부분 본인 db계정으로 설정해주시거나
+SQL 커맨드창 실행하셔서
+
+conn/as sysdba
+create user rin identified by 1004;
+grant connect, resource, dba to rin;
+commit;
+
+해서 rin 사용자 만들어주시면 작동할거같아요
 
