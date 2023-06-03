@@ -72,7 +72,7 @@ public class PostDAO {
 	
 	public int write(int roomID, String postType, String postTitle, String userID, String postContent, String userName) {    
 		
-		// postid, roomid, userid, posttype, title, content, date, username, postindex 순
+		// postid, roomid, userid, posttype, title, content, date, username, postindex 순으로 삽입
 		String SQL = "INSERT INTO posts VALUES (post_seq.nextval,?,?,?,?,?,?,?,?)";  
 		try {
 			
@@ -217,11 +217,9 @@ public class PostDAO {
 	
 	public int delete(int roomID, String postType, int postIndex) {
 		
-		// String SQL = "UPDATE BBS SET bbsAvailable= 0 WHERE bbsID=?";    
-		// 근데 이러면 숫자 재정렬 안되잖아....
 		
 		String SQL = "delete from posts where roomID=? AND postType=? AND postIndex=?"; 
-		//그냥 아예 삭제시키기
+		//포스트 레코드 삭제
 		
 		try {
 			
@@ -231,7 +229,7 @@ public class PostDAO {
 			pstmt.setInt(3, postIndex);
 			pstmt.executeUpdate();
 			
-			String SQL2 = "update posts set postIndex = ROWNUM where roomID=? AND postType=?";    //재정렬
+			String SQL2 = "update posts set postIndex = ROWNUM where roomID=? AND postType=?";    //해당 게시판의 postIndex 재정렬
 			PreparedStatement pstmt2 = conn.prepareStatement(SQL2);
 			pstmt2.setInt(1, roomID);
 			pstmt2.setString(2, postType);

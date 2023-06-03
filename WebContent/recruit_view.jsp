@@ -108,35 +108,23 @@
             </a>
         </div>
 
+		<!-- 사이드 바 옆 컨테이너 부분 -->
         <div class="container ms-3 mt-5" id="main">
 
             <div class="row">
-				<table class="table" style="text-align:center; border: 1px solid #dddddd">
-						<thead>
-	                        <tr>
-	                            <th style="background-color: #eeeeee; text-align: center;">게시판 글보기</th>
-	                        </tr>
-	                    </thead>
-	                    <tbody id="post-list">
-	                        <!-- 게시글이 들어갈 부분 -->
-	                        <tr>
-	                        	<td style="width: 20%"> 글제목 </td>
-	                        	<td colspan="2"><%=post.getPostTitle()%></td>
-	                        </tr>
-	                        <tr>
-	                        	<td style="width: 20%"> 작성자 </td>
-	                        	<td colspan="2"><%=post.getUserName() %></td>
-	                        </tr>
-	                        <tr>
-	                        	<td style="width: 20%"> 작성일자 </td>
-	                        	<td colspan="2"><%=post.getPostDate()%></td>
-	                        </tr>
-	                        <tr>
-	                        	<td style="width: 20%"> 글내용 </td>
-	                        	<td colspan="2" style="min-height:200px; text-align:left;"><%=post.getPostContent() %></td>
-	                        </tr>
-	                    </tbody>			
-				</table>
+					<div class="post-content">
+						<h3> <%=post.getPostTitle()%> </h3>
+						<hr>
+						<div class="d-flex justify-content-between">
+						<span>작성자: <%=post.getUserName() %></span><span></span><span>작성일자: <%=post.getPostDate()%> </span>
+						</div>
+						<hr>
+						<div style="min-height:150px; white-space: pre-line;">  <!-- 개행 유지 -->
+						<%=post.getPostContent() %>
+						</div>
+						<hr>
+					</div>
+					
 					<div class="text-end">
 					<a href="recruitBBS.jsp" class="btn btn-primary"> 목록으로 </a>
 

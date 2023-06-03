@@ -1,0 +1,23 @@
+	create table userlist (
+    	userID VARCHAR(20) primary KEY,
+    	userPassword VARCHAR(20),
+    	userName VARCHAR(20),
+    	userEmail VARCHAR(50)
+	);
+    
+    create table posts (
+    postID INT PRIMARY KEY,    
+    roomID INT,
+    userID VARCHAR(20),
+    postType VARCHAR(20),       
+    postTitle NVARCHAR2(50),    
+    postContent NVARCHAR2(2000),   
+    postDate VARCHAR(20),
+    userName VARCHAR(20), 
+    postIndex INT        
+	); 
+    
+    CREATE SEQUENCE post_seq;
+
+
+

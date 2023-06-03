@@ -24,6 +24,10 @@
 
 <style>
 	* {font-family: 'Nanum Gothic', sans-serif;}  /*페이지 전체에 나눔고딕 폰트 사용*/
+	#post-list a, a:hover {        /* post-list의 자식 a태그는 색상 변경과 밑줄 제거 */
+		color:#000000;
+		text-decoration: none;
+	}
 </style>
 
 </head>
@@ -135,12 +139,12 @@
 						<%
 							if (pageNumber!=1) { //1페이지가 아니라면 이전버튼 필요
 						%>
-						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber-1%>" class="btn btn-secondary" style="width:70px;">이전</a>
+						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber-1%>" class="btn btn-secondary" style="width:wrap-content;">◀이전</a>
 						<%
 							} if(postDAO.nextPage(roomID, postType, pageNumber+1)){  //다음페이지가 존재한다면
 						%>
 						<span></span>
-						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber+1%>" class="btn btn-secondary" style="width:70px;">다음</a>
+						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber+1%>" class="btn btn-secondary" style="width:wrap-content;">다음▶</a>
 						<%
 							}
 						%>

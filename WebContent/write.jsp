@@ -95,24 +95,16 @@
 
             <div class="row">
 				<form method="post" action="writeAction.jsp">
-				<table class="table" style="text-align:center; border: 1px solid #dddddd">
-						<thead>
-	                        <tr>
-	                            <th style="background-color: #eeeeee; text-align: left; font-size:20pt">게시판 글쓰기</th>
-	                            <input type="hidden" name="roomID" value="<%=roomID%>">         <!-- 룸아이디랑 카테고리 안보이게 전달 -->
-    							<input type="hidden" name="postType" value="<%=postType%>">
-	                        </tr>
-	                    </thead>
-	                    <tbody id="post-list">
-	                        <!-- 게시글양식이 들어갈 부분 -->
-	                        <tr>
-	                        	<td><input type="text" class="form-control" placeholder="글제목" name="postTitle" maxlength="50"></td>
-	                        </tr>
-	                        <tr>
-	                        	<td><textarea class="form-control" placeholder="글내용" name="postContent" maxlength="2048"></textarea></td>
-	                        </tr>
-	                    </tbody>			
-				</table>
+					<div class="post-content">
+						<input type="hidden" name="roomID" value="<%=roomID%>">         <!-- 룸아이디랑 카테고리 안보이게 전달 -->
+    					<input type="hidden" name="postType" value="<%=postType%>">
+						<h3> 게시판 글쓰기 </h3>
+						<hr>
+						<input type="text" class="form-control" placeholder="글제목" name="postTitle" maxlength="50">
+						<br>
+						<textarea class="form-control" placeholder="내용을 입력하세요." rows="15" name="postContent" maxlength="2000"></textarea>
+						<hr>
+					</div>
 					<div class="text-end">
 					<input type="submit" class="btn btn-primary" value="글쓰기">
 					</div>

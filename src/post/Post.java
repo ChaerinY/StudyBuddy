@@ -8,7 +8,7 @@ public class Post {
     roomID INT,
     userID VARCHAR(20),
     postType VARCHAR(20),         //카테고리. 모집게시판/공지사항/과제게시판/Q&A게시판/자유게시판
-    postTitle NVARCHAR2(20),     //제한 20자이내
+    postTitle NVARCHAR2(50),     //제한 50자이내
     postContent NVARCHAR2(2000),     //제한 2000자이내
     postDate VARCHAR(20),
     userName VARCHAR(20),    // 작성자란에 id대신 닉네임 표시하기위해
