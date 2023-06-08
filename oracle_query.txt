@@ -34,7 +34,7 @@ create user rin identified by 1004;
 grant connect, resource, dba to rin;
 commit;
 
-해서 rin 사용자 만들어주시면 작동할거같아요
+해서 rin 사용자 만들어주시면 작동할 거같아요
 
 또 이클립스 ide에서 보지마시고(부트스트랩 ui가 제대로 안나오더라구요) 서버만 실행한다음
 크롬이나 엣지같은 타 브라우저에서 
