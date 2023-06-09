@@ -1,17 +1,50 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-<%@ page import="java.io.PrintWriter" %>
-<%@ page import="post.PostDAO" %>  
-<%@ page import="post.Post" %>
-<%@ page import="java.util.ArrayList" %>    
+<%@ page import="java.io.PrintWriter" %>  
+<%@ page import="room.RoomDAO" %>
+<%@ page import="room.Room" %>
+<%@ page import="java.util.ArrayList" %>
+<% request.setCharacterEncoding("UTF-8"); %>    
 <!DOCTYPE html>
 <html lang="en">
+<% 
+		String userID = null;
+		String userName = null;
+		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
+			userID=(String) session.getAttribute("userID");
+			userName=(String) session.getAttribute("userName");
+		}
+		
+		if(userID == null){  //로그인이 되어있지 않다면
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('로그인을 하세요.')");
+			script.println("location.href = 'login.jsp;'");   //로그인페이지로 이동
+			script.println("</script>");
+		}
+		
+		int roomID = -1; // -1은 존재하지 않음
+		
+		if (request.getParameter("roomID") != null)
+			roomID = Integer.parseInt(request.getParameter("roomID"));
+		
+		if(roomID == -1){  
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('잘못된 접근입니다.')");
+			script.println("location.href = 'main.jsp;'");  
+			script.println("</script>");
+		}
 
+		
+		Room room = new RoomDAO().getRoom(roomID);
+		
+	%>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyBuddy - 모집게시판</title>
+    <title>StudyBuddy - <%=room.getRoomName()%></title>
     <!-- 부트스트랩 CSS 링크 추가 -->
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -24,45 +57,15 @@
 
 <style>
 	* {font-family: 'Nanum Gothic', sans-serif;}  /*페이지 전체에 나눔고딕 폰트 사용*/
+	#post-list a, a:hover {        /* post-list의 자식 a태그는 색상 변경과 밑줄 제거 */
+		color:#000000;
+		text-decoration: none;
+	}
 </style>
 
 </head>
 
 <body>
-	<% 
-		String userID = null;
-		String userName = null;
-		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
-			userID=(String) session.getAttribute("userID");
-			userName=(String) session.getAttribute("userName");
-		}
-		
-		int roomID = 0; // roomID 0번은 모집게시판 의미.
-		String postType = "모집게시판";
-		
-		int postIndex=0;
-		
-		
-		if (request.getParameter("postIndex") != null){
-			postIndex = Integer.parseInt(request.getParameter("postIndex"));   
-			/* a태그 링크타고 올때 recruit_view.jsp?postIndex=<%= list.get(i).getPostIndex() ~~~~에서 postIndex받아옴 */
-			
-		}
-		
-		if (postIndex==0){
-			
-			PrintWriter script = response.getWriter();
-			script.println("<script>");
-			script.println("alert('유효하지 않은 글입니다.')");
-			script.println("location.href='recruitBBS.jsp'");
-			script.println("</script>");			
-			
-		}
-		
-		Post post = new PostDAO().getPost(roomID, postType, postIndex);   //현재 보려는 post객체 가져오기
-		
-	%>
-
     <header class="p-3 text-bg-dark">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -103,45 +106,39 @@
 
     <div class="d-flex">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: calc(100vh - 75px);">
-            <a href="recruitBBS.jsp" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none" style="padding: 20px;">
-                <span class="fs-4">모집게시판</span>
+            <a href="roomMain.jsp?roomID=<%=room.getRoomID()%>" class="d-flex align-items-center link-dark text-decoration-none" style="margin: 10px;">
+                <span class="fs-4" style="font-weight: bold;"><%=room.getRoomName()%></span>
             </a>
+            <hr>
+           <ul class="nav nav-pills flex-column mb-auto">
+            	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
+            </ul>
         </div>
 
-		<!-- 사이드 바 옆 컨테이너 부분 -->
         <div class="container ms-3 mt-5" id="main">
+        	<section>
+        		<div class="d-flex justify-content-between align-items-end">
+        			<img src="" style="width: 300px; height: 300px;"/>	<!--  등록한 이미지 불러오도록 -->
+        			<span style="text-align: right;">룸ID: <%=room.getRoomID()%></span>
+        		</div>
+        	</section>
 
-            <div class="row">
-					<div class="post-content">
-						<h3> <%=post.getPostTitle()%> </h3>
-						<hr>
-						<div class="d-flex justify-content-between">
-						<span>작성자: <%=post.getUserName() %></span><span></span><span>작성일자: <%=post.getPostDate()%> </span>
-						</div>
-						<hr>
-						<div style="min-height:150px; white-space: pre-line;">  <!-- 개행 유지 -->
-						<%=post.getPostContent() %>
-						</div>
-						<hr>
-					</div>
+            <div class="bg-light p-5 rounded mt-3">
+            		<h2 style="text-align: left;"> <%=room.getRoomName()%> </h2>
+            		<p class="lead"><%=room.getRoomContent()%></p>
+            </div>
 					
-					<div class="text-end">
-					<a href="recruitBBS.jsp" class="btn btn-primary"> 목록으로 </a>
-
-					<% 
-						if(userID != null && userID.equals(post.getUserID())) {    //작성자와 현재 로그인한사람이 같으면 수정삭제 버튼출력됨
-							
-					%>
-						<a href="update.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-primary"> 수정 </a>
-						<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="deleteAction.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-primary"> 삭제 </a>
-					<% 		
-						}
-					
-					%>
-					</div>
+			<div class="d-flex justify-content-end">
+					<a onclick="return confirm('정말로 탈퇴하시겠습니까?')" href="#.jsp?roomID=<%=roomID%>" class="btn btn-secondary" role="button">탈퇴하기</a>
+					<!-- 탈퇴 Action하는 곳으로 -->
 			</div>
-        </div>
-    </div>
+					
+		</div>
+
+       </div>
 
 
     <!-- 부트스트랩 JS 및 jQuery 추가 -->

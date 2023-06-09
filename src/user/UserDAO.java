@@ -19,8 +19,8 @@ public class UserDAO {
 	public UserDAO() {    //자동으로 데이터베이스 커넥션이 이루어질수 있도록 생성자 작성
 		try {
 			String url="jdbc:oracle:thin:@localhost:1521";
-			String user ="RIN";
-			String password ="1004";
+			String user ="scott";
+			String password ="tiger";
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection(url, user, password);
 			

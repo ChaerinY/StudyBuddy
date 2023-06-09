@@ -4,14 +4,64 @@
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="post.PostDAO" %>  
 <%@ page import="post.Post" %>
+<%@ page import="room.RoomDAO" %>  
+<%@ page import="room.Room" %>
 <%@ page import="java.util.ArrayList" %>    
+<% request.setCharacterEncoding("UTF-8"); %>
 <!DOCTYPE html>
 <html lang="en">
-
+	<% 
+		String userID = null;
+		String userName = null;
+		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
+			userID=(String) session.getAttribute("userID");
+			userName=(String) session.getAttribute("userName");
+		}
+		
+		if(userID == null){  //로그인이 되어있지 않다면
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('로그인을 하세요.')");
+			script.println("location.href = 'login.jsp;'");   //로그인페이지로 이동
+			script.println("</script>");
+		}
+		
+		int roomID = -1;
+		String postType = null;
+		
+		int postIndex=0;
+		
+		
+		if (request.getParameter("postIndex") != null){
+			postIndex = Integer.parseInt(request.getParameter("postIndex"));   
+			/* a태그 링크타고 올때 studyBBS_View.jsp?postIndex=<%= list.get(i).getPostIndex() ~~~~에서 postIndex받아옴 */
+		}
+		
+		if (request.getParameter("roomID") != null && request.getParameter("postType") != null){
+			roomID = Integer.parseInt(request.getParameter("roomID"));
+			postType = request.getParameter("postType");
+			/* a태그 링크타고 올때 받아옴 */
+		}
+		
+		
+		if (postIndex==0){
+			
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('유효하지 않은 글입니다.')");
+			script.println("location.href='main.jsp'");
+			script.println("</script>");			
+			
+		}
+		
+		Post post = new PostDAO().getPost(roomID, postType, postIndex);   //현재 보려는 post객체 가져오기
+		Room room = new RoomDAO().getRoom(roomID);
+		
+	%>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyBuddy - 모집게시판</title>
+    <title>StudyBuddy - <%=post.getPostType()%></title>
     <!-- 부트스트랩 CSS 링크 추가 -->
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -29,40 +79,6 @@
 </head>
 
 <body>
-	<% 
-		String userID = null;
-		String userName = null;
-		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
-			userID=(String) session.getAttribute("userID");
-			userName=(String) session.getAttribute("userName");
-		}
-		
-		int roomID = 0; // roomID 0번은 모집게시판 의미.
-		String postType = "모집게시판";
-		
-		int postIndex=0;
-		
-		
-		if (request.getParameter("postIndex") != null){
-			postIndex = Integer.parseInt(request.getParameter("postIndex"));   
-			/* a태그 링크타고 올때 recruit_view.jsp?postIndex=<%= list.get(i).getPostIndex() ~~~~에서 postIndex받아옴 */
-			
-		}
-		
-		if (postIndex==0){
-			
-			PrintWriter script = response.getWriter();
-			script.println("<script>");
-			script.println("alert('유효하지 않은 글입니다.')");
-			script.println("location.href='recruitBBS.jsp'");
-			script.println("</script>");			
-			
-		}
-		
-		Post post = new PostDAO().getPost(roomID, postType, postIndex);   //현재 보려는 post객체 가져오기
-		
-	%>
-
     <header class="p-3 text-bg-dark">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -103,9 +119,16 @@
 
     <div class="d-flex">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: calc(100vh - 75px);">
-            <a href="recruitBBS.jsp" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none" style="padding: 20px;">
-                <span class="fs-4">모집게시판</span>
+            <a href="roomMain.jsp?roomID=<%=room.getRoomID()%>" class="d-flex align-items-center link-dark text-decoration-none" style="margin: 10px;">
+                <span class="fs-4" style="font-weight: bold;"><%=room.getRoomName()%></span>
             </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+            	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
+            </ul>
         </div>
 
 		<!-- 사이드 바 옆 컨테이너 부분 -->
@@ -126,7 +149,7 @@
 					</div>
 					
 					<div class="text-end">
-					<a href="recruitBBS.jsp" class="btn btn-primary"> 목록으로 </a>
+					<a href="studyBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary"> 목록으로 </a>
 
 					<% 
 						if(userID != null && userID.equals(post.getUserID())) {    //작성자와 현재 로그인한사람이 같으면 수정삭제 버튼출력됨

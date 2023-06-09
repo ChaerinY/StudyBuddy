@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.io.PrintWriter" %>
+<% request.setCharacterEncoding("UTF-8"); %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +23,23 @@
 
 </head>
 <body>
-
+<% 
+		String userID = null;
+		String userName = null;
+		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
+			userID=(String) session.getAttribute("userID");
+			userName=(String) session.getAttribute("userName");
+		}
+		
+		if(userID == null){  //로그인이 되어있지 않다면
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('로그인을 하세요.')");
+			script.println("location.href = 'login.jsp;'");   //로그인페이지로 이동
+			script.println("</script>");
+		}
+				
+	%>
     <header class="p-3 text-bg-dark">
         <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -37,29 +55,32 @@
     <section>
       <h2 style="font-weight: bold"><img src="img/wig_blue.png" width="50px" style="padding-right: 7px;">StudyBuddy</h2>
       <br>
-      <h4 style="font-weight: bold">회원가입</h4>
+      <h4 style="font-weight: bold">스터디 생성</h4>
       <br>
     </section>
 
     <section>
-        <form method="post" action="joinAction.jsp">
-          <p>아이디</p>
-          <input type="text" class="form-control" placeholder="아이디를 입력하세요." style="width: 400px;" name="userID" maxlength="20" onkeydown="this.value=this.value.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '')">
+        <form method="post" action="createAction.jsp">
+          <p>스터디룸 이름</p>
+          <input type="text" class="form-control" placeholder="아이디를 입력하세요." style="width: 400px;" name="roomName" maxlength="50">
           <br>
       
-          <p>비밀번호</p>
-          <input type="password" class="form-control" placeholder="비밀번호를 입력하세요." style="width: 400px;" name="userPassword" maxlength="20">
+          <p>스터디 소개</p>
+          <textarea class="form-control" placeholder="간단한 소갯말을 입력하세요." style="width: 400px;" name="roomContent" maxlength="2000"></textarea>
           <br>
 
-          <p>닉네임</p>
-          <input type="text" class="form-control" placeholder="닉네임을 입력하세요." style="width: 400px;" name="userName" maxlength="20">
-          <br>
+		<!-- 미구현 -->
+          <p>이미지 등록</p>
+        	<img id="preview" src="img/wig_blue.png" alt="Image preview" style="width: 200px; height: 200px;"/>
+        	<br>
+        	<input type="file" class="form-control" id="imageUpload" style="width: 400px;" accept="image/*">
+        	<br>
 
-          <p>이메일</p>
-          <input type="email" class="form-control" placeholder="이메일을 입력하세요." style="width: 400px;" name="userEmail" maxlength="50" onkeydown="this.value=this.value.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '')">
+          <p>최대 인원수</p>
+          <input type="number" class="form-control" placeholder="숫자를 입력하세요." style="width: 400px;" name="maximum" min="1" max="20">
           <br><br>
 
-          <input type="submit" class="btn btn-primary" value="가입하기">&nbsp;
+          <input type="submit" class="btn btn-primary" value="생성하기">
           <button type="button" class="btn btn-secondary" onclick="goBack()">뒤로가기</button>
           <br><br><br>
         </form>
@@ -67,6 +88,18 @@
   </main>
 
   <script>
+  document.getElementById("imageUpload").addEventListener("change", function(e) {
+      let reader = new FileReader();
+  
+      reader.onload = function(e) {
+          let preview = document.getElementById("preview");
+          preview.src = e.target.result;
+          preview.style.display = "block";
+      }
+  
+      reader.readAsDataURL(this.files[0]);
+  });
+  
     function goBack() {
       window.history.back();
     }

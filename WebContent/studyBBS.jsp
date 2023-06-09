@@ -4,15 +4,53 @@
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="post.PostDAO" %>  
 <%@ page import="post.Post" %>
+<%@ page import="room.RoomDAO" %>
+<%@ page import="room.Room" %>
 <%@ page import="java.util.ArrayList" %>    
+<% request.setCharacterEncoding("UTF-8"); %>    
 
 <!DOCTYPE html>
 <html lang="en">
+<% 
+		String userID = null;
+		String userName = null;
+		
+		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
+			userID=(String) session.getAttribute("userID");
+			userName=(String) session.getAttribute("userName");
+		}
+		
+		int roomID = -1;
+		String postType = null;
+		
+		// 룸 메인페이지 연결
+		if (request.getParameter("roomID") != null && request.getParameter("postType") != null){
+			roomID = Integer.parseInt(request.getParameter("roomID"));
+			postType = request.getParameter("postType");
+		}
+		
+		if(roomID == -1 || postType == null){  
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('잘못된 접근입니다.')");
+			script.println("location.href = 'main.jsp;'");  
+			script.println("</script>");
+		}
+		
+		int pageNumber = 1; //기본 페이지 의미
+		
+		if (request.getParameter("pageNumber") != null){
+			pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
+		}
+		
+		Room room = new RoomDAO().getRoom(roomID);
+
+	%>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyBuddy - 모집게시판</title>
+    <title>StudyBuddy - <%=room.getRoomName()%></title>
     <!-- 부트스트랩 CSS 링크 추가 -->
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -32,26 +70,7 @@
 </style>
 
 </head>
-
 <body>
-	<% 
-		String userID = null;
-		String userName = null;
-		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
-			userID=(String) session.getAttribute("userID");
-			userName=(String) session.getAttribute("userName");
-		}
-		
-		int roomID = 0; // roomID 0번은 모집게시판 의미.
-		String postType = "모집게시판";
-		
-		int pageNumber = 1; //기본 페이지 의미
-		
-		if (request.getParameter("pageNumber") != null){
-			pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
-		}
-		
-	%>
 
     <header class="p-3 text-bg-dark">
         <div class="container">
@@ -93,14 +112,21 @@
 
     <div class="d-flex">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: calc(100vh - 75px);">
-            <a href="recruitBBS.jsp" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none" style="padding: 20px;">
-                <span class="fs-4">모집게시판</span>
+            <a href="roomMain.jsp?roomID=<%=room.getRoomID()%>" class="d-flex align-items-center link-dark text-decoration-none" style="margin: 10px;">
+                <span class="fs-4" style="font-weight: bold;"><%=room.getRoomName()%></span>
             </a>
+             <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+            	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
+            </ul>
         </div>
 
         <div class="container ms-3 mt-5" id="main">
 
-            <h2>모집게시판</h2>
+            <h2><%=postType%></h2>
             <hr>
 
             <!-- 이부분에 게시판 표시 -->
@@ -126,7 +152,7 @@
 			                        %>		
 			                        <tr>
 			                        	<td><%= list.get(i).getPostIndex()%></td>
-			                        	<td><a href="recruit_View.jsp?postIndex=<%= list.get(i).getPostIndex()%>&roomID=<%= list.get(i).getRoomID()%>&postType=<%= list.get(i).getPostType()%>"><%=list.get(i).getPostTitle() %></a></td>
+			                        	<td><a href="study_View.jsp?postIndex=<%=list.get(i).getPostIndex()%>&roomID=<%= list.get(i).getRoomID()%>&postType=<%= list.get(i).getPostType()%>"><%=list.get(i).getPostTitle() %></a></td>
 			                        	<td><%= list.get(i).getUserName()%></td>
 			                        	<td><%= list.get(i).getPostDate()%></td>
 			                        </tr>
@@ -140,20 +166,29 @@
 						<%
 							if (pageNumber!=1) { //1페이지가 아니라면 이전버튼 필요
 						%>
-						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber-1%>" class="btn btn-secondary" style="width:wrap-content;">◀이전</a>
+						<a href="studyBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber-1%>" class="btn btn-secondary" style="width:wrap-content;">◀이전</a>
 						<%
 							} if(postDAO.nextPage(roomID, postType, pageNumber+1)){  //다음페이지가 존재한다면
 						%>
 						<span></span>
-						<a href="recruitBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber+1%>" class="btn btn-secondary" style="width:wrap-content;">다음▶</a>
+						<a href="studyBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber+1%>" class="btn btn-secondary" style="width:wrap-content;">다음▶</a>
 						<%
 							}
 						%>
 						</div>
 						
+						<%
+						if(postType.equals("공지사항") || postType.equals("과제게시판")){		// 해당 게시판에서는 hostID만 게시글 작성 가능
+							if(userID != null && userID.equals(room.getHostID())){
+						%>
 						<div class="text-end" style="padding-top:10px">
 							<a href="write.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary" role="button">글쓰기</a>
 						</div>
+						<%}}else{%>
+							<div class="text-end" style="padding-top:10px">
+							<a href="write.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary" role="button">글쓰기</a>
+							</div>
+						<%} %>
 					</div>
 					
 				</div>

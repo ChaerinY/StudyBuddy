@@ -40,3 +40,85 @@ commit;
 크롬이나 엣지같은 타 브라우저에서 
 http://localhost:8888/StudyBuddy/main.jsp 
 주소창에 이런식으로 접속하셔야 ui안깨지고 제대로 나옵니다!!
+
+
+----------------------------------------------------------
+2023.06.10 추가
+
+다들 scott 계정 만드셨길래 저도 scott 계정으로 통일해서 계정설정 부분은 따로 안바꾸셔도 될거같습니다.
+아래의 테이블을 필요로합니다.
+
+	create table userlist (
+    	userID VARCHAR(20) primary KEY,
+    	userPassword VARCHAR(20),
+    	userName VARCHAR(20),
+    	userEmail VARCHAR(50)
+	);
+    
+    create table posts (
+    postID INT PRIMARY KEY,    
+    roomID INT,
+    userID VARCHAR(20),
+    postType VARCHAR(20),       
+    postTitle NVARCHAR2(50),    
+    postContent NVARCHAR2(2000),   
+    postDate VARCHAR(20),
+    userName VARCHAR(20), 
+    postIndex INT        
+	); 
+    
+    CREATE SEQUENCE post_seq;
+
+
+	create table room (
+    	roomID INT PRIMARY KEY,,
+    	hostID VARCHAR2(20),    
+    	roomName NVARCHAR2(50),       
+    	roomContent NVARCHAR2(2000),    
+    	maximum INT        
+	);  
+
+	CREATE TABLE ENROL (
+	  ROOMID NUMBER NOT NULL,
+	  USERID VARCHAR2(20 BYTE) NOT NULL,
+	  AUTH NUMBER DEFAULT 0,
+	  PRIMARY KEY (ROOMID, USERID)
+	);
+
+
+[이하 통합과정 및 코드리뷰 중 수정사항]
+
+- RoomDAO에서 'SELECT * FROM room WHERE roomID=?' 이 쿼리문 실행하는 함수는 room객체 하나만 갖고오는게 더 알맞는 거 같아서
+searchRoom대신 가희님 코드의 getRoom으로 대체했습니다 (리턴값 ArrayList<Room>대신 Room 객체 하나만 받도록)
+
+- createAction.jsp 53-36줄
+int roomID = random.nextInt(100000); <으로만 작성해두면 룸번호 중복될 수있으므로
+roomDAO에서 checkExists함수 생성후 룸아이디 존재여부 체크 후 중복이라면 다시 룸아이디 생성하도록 수정
+
+- 스터디룸 생성 후 생성한 자의 가입 절차가 없어 마이스터디의 리스트에 뜨지않으므로
+스터디룸을 생성한 자는 자동으로 해당 스터디룸에 방장권한(auth=1)으로 가입되도록
+createAction.jsp 76-94라인 코드 추가했습니다.
+
+- enrolAction.jsp 42~75라인 추가
+가입할때 인원수 제한에 걸리는지 체크하기위해 
+enrolDAO에 memberNum(roomID) 함수 (현재 인원수)
+roomDAO에 maxMemberNum(roomID) 함수 추가 (최대 인원수)
+
+- createroom.jsp, createAction.jsp, enrolAction.jsp 로그인 세션관련해서 코드 추가
+
+- 겹치는 부분인 makeAction.jsp 와 makeRoom.jsp는 삭제 (각각 createAction과 createroom으로 통합)
+
+- 모달 구현에서 roomid값을 받아오는데 문제가 있어 모달을 아예 studySearch.jsp 페이지로 분리했습니다. 
+검색 버튼을 클릭하면 roomid값을 파라미터로 넘겨주면서 studySearch.jsp로 이동합니다.
+과정에서 mystudy.jsp 일부 수정 (모달부분 떼어내서 studySearch.jsp 분리, 
+112line 버튼 누를시 action="studySearch.jsp"로 연결,
+156line href부분 roomMain.jsp?roomID=로 연결)
+
+- 스터디룸 가입 성공시 main페이지로 이동하던걸 마이스터디 페이지로 이동하게 수정
+
+- 각 페이지 헤더 부분 '나의스터디' mystudy.jsp 연결, '마이페이지' mypage.jsp로 연결
+
+
+마이페이지 부분은 jsp만 생성해두고 아직 구현은 안해뒀습니다!
+혹 이해안가시는 부분은 질문주세요! 고생많으시고 감사합니다.
+

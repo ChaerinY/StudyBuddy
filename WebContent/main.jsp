@@ -45,7 +45,7 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
               <li><a href="main.jsp" class="nav-link px-2 text-white">홈</a></li>
               <li><a href="recruitBBS.jsp" class="nav-link px-2 text-white">모집게시판</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">나의스터디</a></li>
+              <li><a href="mystudy.jsp" class="nav-link px-2 text-white">나의스터디</a></li>
             </ul>
     
     		<% 
@@ -61,7 +61,7 @@
     		%>
     			<div class="text-end">
 	              <button type="button" class="btn btn-secondary me-2"><a href="logoutAction.jsp" style="color:#ffffff; text-decoration:none;">로그아웃</a></button>
-	              <button type="button" class="btn btn-primary"><a href="#" style="color:#ffffff; text-decoration:none;">마이페이지</a></button>
+	              <button type="button" class="btn btn-primary"><a href="mypage.jsp" style="color:#ffffff; text-decoration:none;">마이페이지</a></button>
 	            </div>
     			
     		<%  }
