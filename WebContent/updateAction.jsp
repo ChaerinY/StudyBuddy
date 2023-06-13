@@ -41,7 +41,6 @@
 			roomID = Integer.parseInt(request.getParameter("roomID"));
 			postType = request.getParameter("postType");
 			postIndex = Integer.parseInt(request.getParameter("postIndex"));   
-			/* href 링크타고 올때 recruit_view.jsp?postIndex=<%= list.get(i).getPostIndex() ~~~~에서 postIndex받아옴 */
 		}
 		
 		

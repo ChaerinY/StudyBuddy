@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import post.Post;
+
 public class UserDAO {
 
 
@@ -90,6 +92,83 @@ public class UserDAO {
 		}
 		
 		return null; // 없거나 데이터베이스 오류
+	}
+	
+	public User getUser(String userID) {              //아이디 검색으로 유저 정보 가져옴
+		String SQL = "SELECT * FROM userlist WHERE userID = ?";
+		
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, userID);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				User user = new User();
+				
+		    	// userID userPassword userName userEmail 순
+				user.setUserID(rs.getString(1));
+				user.setUserPassword(rs.getString(2));
+				user.setUserName(rs.getString(3));
+				user.setUserEmail(rs.getString(4));
+			
+				return user;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public int update(String userID, String userPass, String userName, String userEmail) {
+		
+		String SQL = "UPDATE userlist SET userPassword=? , userName=?, userEmail=? WHERE userID=?";
+		try {
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, userPass);
+			pstmt.setString(2, userName);
+			pstmt.setString(3, userEmail);
+			pstmt.setString(4, userID);    //각 물음표 위치에 삽입
+			
+			return pstmt.executeUpdate();  //쿼리문 실행. 성공시 0이상을 반환
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1; //데이터베이스오류
+	}
+	
+	public int delete(String userID) {
+		
+		
+		String SQL = "update posts set userName=?, userID=? where userID=?";    //탈퇴할 회원의 게시글의 닉네임과 아이디를 탈퇴회원으로 변경
+		
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, "(탈퇴회원)");
+			pstmt.setString(2, "-");
+			pstmt.setString(3, userID);
+			pstmt.executeUpdate();
+			
+			String SQL2 = "delete from enrol where userID=?";        //탈퇴회원은 자동으로 가입했던 스터디그룹들도 탈퇴
+			PreparedStatement pstmt2 = conn.prepareStatement(SQL2);
+			pstmt2.setString(1, userID);
+			pstmt2.executeUpdate();
+			
+			String SQL3 = "delete from userlist where userID=?";     //회원정보 삭제
+			PreparedStatement pstmt3 = conn.prepareStatement(SQL3);
+			pstmt3.setString(1, userID);
+			
+			return pstmt3.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return -1;   //데이터베이스 오류. 
+		
 	}
 	
 }

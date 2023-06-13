@@ -10,6 +10,7 @@
 <jsp:setProperty name="post" property="roomID"/>
 <jsp:setProperty name="post" property="postType"/>
 
+<%@ page import="user.UserDAO" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +25,8 @@
 		
 		if(session.getAttribute("userID")!= null){      //세션을 확인해서 userid의 세션이 존재하는 회원들은 userID에  세션값을 담을수 있도록
 			userID=(String) session.getAttribute("userID");
-			userName=(String) session.getAttribute("userName");
+			UserDAO userDAO = new UserDAO();
+			userName=userDAO.searchName(userID);        //0613 마이페이지에서 회원정보 수정후에도 로그인 시의 userName으로 글이 작성되는 문제가 있어 수정
 		}
 		
 		if(userID == null) {  //로그인 되어있지 않다면

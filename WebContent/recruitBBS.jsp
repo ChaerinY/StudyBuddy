@@ -126,7 +126,7 @@
 			                        %>		
 			                        <tr>
 			                        	<td><%= list.get(i).getPostIndex()%></td>
-			                        	<td><a href="recruit_View.jsp?postIndex=<%= list.get(i).getPostIndex()%>&roomID=<%= list.get(i).getRoomID()%>&postType=<%= list.get(i).getPostType()%>"><%=list.get(i).getPostTitle() %></a></td>
+			                        	<td><a href="recruit_view.jsp?postIndex=<%= list.get(i).getPostIndex()%>&roomID=<%= list.get(i).getRoomID()%>&postType=<%= list.get(i).getPostType()%>"><%=list.get(i).getPostTitle() %></a></td>
 			                        	<td><%= list.get(i).getUserName()%></td>
 			                        	<td><%= list.get(i).getPostDate()%></td>
 			                        </tr>

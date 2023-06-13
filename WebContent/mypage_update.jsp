@@ -50,11 +50,6 @@
 		User nowUser = searchDAO.getUser(userID);
 		
 		String userPass = nowUser.getUserPassword();
-	    StringBuilder masked = new StringBuilder();
-	    for (int i = 0; i < userPass.length(); i++) {   //사용자에게 표시할때는 비밀번호 글자수만큼 ●로 표시하도록
-	        masked.append("●");
-	    }
-	    String userPWD = masked.toString();    //글자수만큼 ●로 채워진 스트링(이걸 표시할 예정)
 		
 		String userName = nowUser.getUserName();
 		String userEmail = nowUser.getUserEmail();
@@ -85,6 +80,7 @@
         </div>
     </header>
 
+
     <div class="d-flex">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: calc(100vh - 75px);">
             <div style="margin: 20px;">
@@ -98,29 +94,31 @@
             <hr>
 
             <div class="user-info" style="margin: 10px;">
+            <form method="post" action="UserUpdateAction.jsp">
                 <p>아이디</p>
-                <p id="user-id"><%=userID%></p>
+                <p id="user-id"><%=userID%></p>       <!-- 아이디는 변경불가 -->
                 <br>
             
                 <p>비밀번호</p>
-                <p type="password"><%=userPWD%></p>
+                <input type="password" class="form-control" placeholder="비밀번호를 입력하세요." style="width: 400px;" value="<%=userPass%>" name="userPass">
                 <br>
       
                 <p>닉네임</p>
-                <p id="user-nickname"><%=userName%></p>
+                <input type="text" class="form-control" placeholder="닉네임을 입력하세요." style="width: 400px;" value="<%=userName%>" name="userName">
                 <br>
       
                 <p>이메일</p>
-                <p id="user-email"><%=userEmail%></p>
+                <input type="email" class="form-control" placeholder="이메일을 입력하세요." style="width: 400px;"  value="<%=userEmail%>" name="userEmail">
                 <br><br>
       
                 <div class="text-end">
-                    <a href="mypage_update.jsp" class="btn btn-primary"> 수정하기 </a>
-                    <a onclick="return confirm('정말로 탈퇴하시겠습니까?')" href="user_deleteAction.jsp?userID=<%=userID%>" class="btn btn-secondary"> 탈퇴하기 </a>
+                <input type="submit" class="btn btn-primary" value="수정완료">
                 </div>
+              </form>
             </div>
         </div>
     </div>
+
 
     <!-- 부트스트랩 JS 및 jQuery 추가 -->
     <!-- JavaScript Bundle with Popper -->

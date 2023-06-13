@@ -122,3 +122,29 @@ roomDAO에 maxMemberNum(roomID) 함수 추가 (최대 인원수)
 마이페이지 부분은 jsp만 생성해두고 아직 구현은 안해뒀습니다!
 혹 이해안가시는 부분은 질문주세요! 고생많으시고 감사합니다.
 
+
+---------------------------------------
+20220613 추가사항
+테이블 동일
+
+writeAction.jsp 26-30줄
+userName을 로그인시 세션값으로 저장해두니까 
+마이페이지에서 회원정보를 수정하고나서도 로그인 당시의 유저네임으로 글이 작성되는 문제가 있어 
+userid값을 이용해 다시 유저네임을 불러오도록 수정했습니다
+
+updateAction.jsp 44줄 주석삭제
+다른페이지에서 복붙하는 과정에서 실수로 주석까지 가져온거라 내용과 다릅니다ㅋㅋㅠㅠ 주석 지웠습니다
+
+userDAO.java 97줄~
+userDAO에 유저정보를 가져오는 함수 getUser 추가
+유저정보를 업데이트 하는 함수 update 추가
+유저정보삭제(탈퇴)하는 함수 delete*추가 
+(* 탈퇴회원의 게시글은 그대로 남겨두며 포스트의 userID가 "-", username="(탈퇴회원)"으로 변경됨. 가입되어있던 스터디그룹은 자동탈퇴처리.)
+
+mypage.jsp 내부 구현
+회원정보 수정페이지인 mypage_update.jsp 생성
+회원정보 수정요청을 처리하는 UserUpdateAction.jsp 생성
+회원정보 탈퇴요청 처리하는 user_deleteAction.jsp 생성
+
+recruitBBS.jsp 129줄
+recruit_View.jsp > recruit_view.jsp 오타수정
