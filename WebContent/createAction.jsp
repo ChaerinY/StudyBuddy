@@ -7,6 +7,7 @@
 <%@ page import="room.RoomDAO" %>  
 <%@ page import="enrol.EnrolDAO" %>  
 <%@ page import="java.io.PrintWriter" %>  
+<%@ page import="java.io.File" %>
 <% request.setCharacterEncoding("UTF-8"); %>
 <jsp:useBean id="room" class="room.Room" scope="page" />
 <jsp:setProperty name="room" property="roomID"/>
@@ -28,7 +29,16 @@
 	String userName = null;
 	
 	//파일 설정
-	 String saveDirectory = "C:/jsp-work/StudyBuddy/WebContent/upload/";	//업로드한 이미지가 저장될 디렉토리
+
+	String relativePath = "/upload/";       //상대경로
+	String saveDirectory = request.getServletContext().getRealPath(relativePath);      //getServletContext() -> 루트디렉토리 가져옴
+	
+	// 디렉토리가 존재하는지 확인하고, 없으면 생성
+	File uploadDir = new File(saveDirectory);
+	if (!uploadDir.exists()) {
+	    uploadDir.mkdir();
+	}
+	
 	 int maxPostSize = 10 * 1024 * 1024; // 최대 업로드 파일 크기(10MB로 설정)
 	 String encoding = "UTF-8"; // 인코딩 타입
 	 

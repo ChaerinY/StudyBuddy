@@ -111,7 +111,7 @@ public ArrayList<Room> getMyList(String userID) {
 	return list;
 }
 
-// searchRoomï¿½ï¿½ï¿½ getroomï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+// searchRoom´ë½Å getroomÀ¸·Î ¼öÁ¤
 
 //public ArrayList<Room> searchRoom(Integer roomID) {
 //	
@@ -182,7 +182,7 @@ public boolean checkExists(int roomID) {
 		
 		rs = pstmt.executeQuery();
 		if(rs.next()){
-			return true;          //ï¿½Ø´ï¿½ rooIDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+			return true;          //ÇØ´ç roomID¸¦ °¡Áø ½ºÅÍµð·ëÀÌ Á¸Àç
 		}
 	} catch(Exception e){
 	e.printStackTrace();
@@ -190,7 +190,7 @@ public boolean checkExists(int roomID) {
 	return false;
 }
 
-public int maxMemberNum(int roomID) {        //ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+public int maxMemberNum(int roomID) {        //ÇØ´ç ½ºÅÍµð·ëÀÇ ÃÖ´ëÀÎ¿ø¼ö ¸®ÅÏ
 	
 	String SQL = "SELECT maximum FROM room WHERE roomID=?";    
 	
