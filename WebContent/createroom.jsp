@@ -60,7 +60,7 @@
     </section>
 
     <section>
-        <form method="post" action="createAction.jsp">
+        <form method="post" action="createAction.jsp" enctype="multipart/form-data">
           <p>스터디룸 이름</p>
           <input type="text" class="form-control" placeholder="아이디를 입력하세요." style="width: 400px;" name="roomName" maxlength="50">
           <br>
@@ -73,7 +73,7 @@
           <p>이미지 등록</p>
         	<img id="preview" src="img/wig_blue.png" alt="Image preview" style="width: 200px; height: 200px;"/>
         	<br>
-        	<input type="file" class="form-control" id="imageUpload" style="width: 400px;" accept="image/*">
+        	<input type="file" class="form-control" name="imgfile" id="imageUpload" style="width: 400px;" accept="image/*">
         	<br>
 
           <p>최대 인원수</p>

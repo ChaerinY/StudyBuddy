@@ -121,7 +121,7 @@
         <div class="container ms-3 mt-5" id="main">
         	<section>
         		<div class="d-flex justify-content-between align-items-end">
-        			<img src="" style="width: 300px; height: 300px;"/>	<!--  등록한 이미지 불러오도록 -->
+        			<img src="upload/<%=room.getFileName()%>" style="width: 300px; height: 300px;"/>	<!--  등록한 이미지 불러오도록 -->
         			<span style="text-align: right;">룸ID: <%=room.getRoomID()%></span>
         		</div>
         	</section>

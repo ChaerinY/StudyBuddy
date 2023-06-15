@@ -12,12 +12,17 @@ public class Room {
 	);  
 	 */
 	
+	/*
+	 ALTER TABLE room
+	 	ADD filename VARCHAR2(100);
+	 */
 
 	private int roomID;
     private String hostID;
     private String roomName;
     private String roomContent;
     private int maximum;
+    private String fileName;
     
 	public int getRoomID() {
 		return roomID;
@@ -48,5 +53,13 @@ public class Room {
 	}
 	public void setMaximum(int maximum) {
 		this.maximum = maximum;
+	}
+
+	public String getFileName() {
+	    return fileName;
+	}
+
+	public void setFileName(String fileName) {
+	    this.fileName = fileName;
 	}
 }
