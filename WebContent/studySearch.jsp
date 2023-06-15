@@ -64,7 +64,7 @@
                   <h6>스터디룸ID: <%=searchid %></h6>
                   <div class="d-flex">
                   	<% if(rs!=null && searchid!=0 ){ %>               <!-- search room에서 getroom으로 바뀜에 따라 수정, 0은 모집게시판이므로 검색에서 제외 -->
-                    <img src="img/main_image.jpg" alt="Image" style="width: 200px; height: 200px; margin-right: 20px;"/>
+                    <img src="upload/<%= rs.getFileName()%>" alt="Image" style="width: 200px; height: 200px; margin-right: 20px;"/>
                     <div>
                         <h5 id="study_name" style="margin-top: 10px;"><%= rs.getRoomName()%></h5>
                         <div id="study_content"><%= rs.getRoomContent()%>

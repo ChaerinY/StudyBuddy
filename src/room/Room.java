@@ -10,7 +10,8 @@ public class Room {
     	roomContent NVARCHAR2(2000),    
     	maximum INT        
 	);  
-	
+		 ALTER TABLE room
+	 	ADD filename VARCHAR2(100);
 	roomID = 0 인 모집게시판 미리 존재		
 	insert into room values(0, 'System', '모집게시판', '모집게시판', 0);
 
@@ -21,6 +22,7 @@ public class Room {
     private String roomName;
     private String roomContent;
     private int maximum;
+	private String fileName;
     
 	public int getRoomID() {
 		return roomID;
@@ -51,5 +53,13 @@ public class Room {
 	}
 	public void setMaximum(int maximum) {
 		this.maximum = maximum;
+	}
+	
+	public String getFileName() {
+	    return fileName;
+	}
+
+	public void setFileName(String fileName) {
+	    this.fileName = fileName;
 	}
 }
