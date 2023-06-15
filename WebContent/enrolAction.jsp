@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="user.UserDAO" %>      
 <%@ page import="enrol.EnrolDAO" %>  
 <%@ page import="room.RoomDAO" %>  
 <%@ page import="java.io.PrintWriter" %>  
@@ -19,7 +18,7 @@
 		String userID = null;
 		String userName = null;
 		
-		 Integer roomID = 0;
+		 Integer roomID = -1;
 	        if (request.getParameter("roomid")!=null){
 	        	roomID=Integer.parseInt(request.getParameter("roomid"));
 	        }
@@ -57,7 +56,7 @@
 				
 				Integer auth=0; //룸아이디 검색으로 가입하는 경우 방장x
 				
-				int result = enrolDAO.enrol(roomID, userID,auth) ;
+				int result = enrolDAO.enrol(roomID, userID, auth) ;
 				if(result == -1) {   //db오류, 중복 가입
 					PrintWriter script = response.getWriter();
 					script.println("<script>");

@@ -9,18 +9,14 @@
 <%@ page import="comment.CommentDAO" %>
 <%@ page import="comment.Comment" %>
 <%@ page import="enrol.EnrolDAO" %>
-<%@ page import="user.UserDAO" %>
 <%@ page import="java.util.ArrayList" %>    
 <% request.setCharacterEncoding("UTF-8"); %>
 <!DOCTYPE html>
 <html lang="en">
 	<% 
 		String userID = null;
-		String userName = null;
 		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
 			userID=(String) session.getAttribute("userID");
-			UserDAO userDAO = new UserDAO();
-			userName=userDAO.searchName(userID);
 		}
 		
 		if(userID == null){  //로그인이 되어있지 않다면
@@ -35,20 +31,23 @@
 		String postType = null;
 		
 		int postIndex=0;
+		int commentID=0;
 		
 		
-		if (request.getParameter("postIndex") != null && request.getParameter("roomID") != null && request.getParameter("postType") != null){
+		if (request.getParameter("postIndex") != null && request.getParameter("roomID") != null && request.getParameter("postType") != null && request.getParameter("commentID") != null){
 			postIndex = Integer.parseInt(request.getParameter("postIndex"));   
 			roomID = Integer.parseInt(request.getParameter("roomID"));
 			postType = request.getParameter("postType");
+			commentID = Integer.parseInt(request.getParameter("commentID"));
+			/* a태그 링크타고 올때 studyBBS_View.jsp?postIndex=<%= list.get(i).getPostIndex() ~~~~에서 postIndex받아옴 */
 		}
 		
-		if (postIndex==0){
+		if (postIndex==0 || commentID==0){
 			
 			PrintWriter script = response.getWriter();
 			script.println("<script>");
-			script.println("alert('유효하지 않은 글입니다.')");
-			script.println("location.href='main.jsp'");
+			script.println("alert('유효하지 않습니다.')");
+			script.println("location.href='roomMain.jsp'");
 			script.println("</script>");			
 			
 		}
@@ -66,12 +65,13 @@
 		
 		Post post = new PostDAO().getPost(roomID, postType, postIndex);   //현재 보려는 post객체 가져오기
 		Room room = new RoomDAO().getRoom(roomID);
+		Comment comment = new CommentDAO().getComment(commentID);
 		
 	%>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyBuddy - <%=post.getPostType()%></title>
+    <title>StudyBuddy - <%=postType%></title>
     <!-- 부트스트랩 CSS 링크 추가 -->
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -134,10 +134,10 @@
             </a>
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
-            	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
-            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
-            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
-            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
+            	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
             </ul>
         </div>
 
@@ -166,7 +166,7 @@
 							
 					%>
 						<a href="update.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-primary"> 수정 </a>
-						<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="deleteAction.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-secondary"> 삭제 </a>
+						<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="deleteAction.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-primary"> 삭제 </a>
 					<% 		
 						}%>
 						<br><br>
@@ -203,7 +203,7 @@
                   						<a href="commentUpdate.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=list.get(i).getCommentID()%>" 
                   						class="btn btn-primary">수정</a>
                   						<a href="commentDeleteAction.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=list.get(i).getCommentID()%>" 
-                  						onclick="return confirm('정말로 삭제하시겠습니까?')" class="btn btn-secondary">삭제</a></td>
+                  						onclick="return confirm('정말로 삭제하시겠습니까?')" class="btn btn-primary">삭제</a></td>
                   					</tr>
                   					<%}}%>
                   				</tbody>
@@ -214,23 +214,18 @@
       <br>
 		<div class="container">
       		<div class="row">
-            	<form method="post" action="submitAction.jsp">
-            		<table class="table table-bordered" style="text-align: center; border: 1px solid #dddddd">
-               			<tbody>
-                  			<tr>
-                     			<td align="left"><%= userName %></td>
-                  			</tr>
-                  			<tr>
-                     			<td>
-                     			<input type="hidden" name="userName" value="<%=userName%>">
-                     			<input type="hidden" name="postID" value="<%=post.getPostID()%>">
-                     			<textarea class="form-control" placeholder="댓글 쓰기" style="width: 100%;" name="commentContent" maxlength="100"></textarea>
-                     			</td>
-                  			</tr>
-               			</tbody>
-            		</table>
-            		<input type="submit" class="btn btn-primary" value="댓글 쓰기">
-            	</form>
+            	<form method="post" action="commentUpdateAction.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=commentID%>">
+				<table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
+					<tbody>
+						<input type="hidden" name="userID" value="<%=comment.getUserID()%>">
+    					<input type="hidden" name="postID" value="<%=comment.getPostID()%>">
+						<tr>
+							<td><textarea class="form-control" placeholder="수정할 내용을 입력하세요." style="width: 100%;" name="commentContent" maxlength="100"><%=comment.getCommentContent() %></textarea></td>
+						</tr>
+					</tbody>
+				</table>
+				<input type="submit" class="btn btn-success pull-right" value="댓글수정">
+		</form>
       		</div>
    		</div>
 		</div>

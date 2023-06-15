@@ -6,6 +6,8 @@
 <%@ page import="post.Post" %>
 <%@ page import="room.RoomDAO" %>
 <%@ page import="room.Room" %>
+<%@ page import="enrol.EnrolDAO" %>
+<%@ page import="user.UserDAO" %>
 <%@ page import="java.util.ArrayList" %>    
 <% request.setCharacterEncoding("UTF-8"); %>    
 
@@ -13,11 +15,9 @@
 <html lang="en">
 <% 
 		String userID = null;
-		String userName = null;
 		
 		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
 			userID=(String) session.getAttribute("userID");
-			userName=(String) session.getAttribute("userName");
 		}
 		
 		int roomID = -1;
@@ -29,7 +29,10 @@
 			postType = request.getParameter("postType");
 		}
 		
-		if(roomID == -1 || postType == null){  
+		EnrolDAO enrolDAO = new EnrolDAO();
+		int auth = enrolDAO.getAuth(roomID, userID); // 방장이나 회원만 열람 가능
+		
+		if(roomID == -1 || postType == null || auth == -1){  
 			PrintWriter script = response.getWriter();
 			script.println("<script>");
 			script.println("alert('잘못된 접근입니다.')");
@@ -117,15 +120,33 @@
             </a>
              <hr>
             <ul class="nav nav-pills flex-column mb-auto">
-            	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
-            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
-            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
-            	<li><a href="studyBBS.jsp?roomID=<%=room.getRoomID()%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
+            	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
+            	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
             </ul>
+            <hr>
+            <div class="row">
+            <form method="post" action="searchBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>">
+							<table align="center" style="text-align: center; width:200px;">
+								<tr>
+									<td>
+									<select name="searchOption">
+										<option value="postTitle" selected>제목</option>
+										<option value="postContent">내용</option>
+										<option value="userName">작성자</option>
+									</select>
+									</td>
+									<td>
+										<input type="text" name="searchBBS" placeholder="검색어를 입력해주세요." style="width:wrap-content;" maxlength="30">
+									</td>
+								</tr>
+							</table>
+						</form>
+						</div>
         </div>
 
         <div class="container ms-3 mt-5" id="main">
-
             <h2><%=postType%></h2>
             <hr>
 
@@ -170,7 +191,8 @@
 						<%
 							} if(postDAO.nextPage(roomID, postType, pageNumber+1)){  //다음페이지가 존재한다면
 						%>
-						<span></span>
+						<span>
+						</span>
 						<a href="studyBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>&pageNumber=<%=pageNumber+1%>" class="btn btn-secondary" style="width:wrap-content;">다음▶</a>
 						<%
 							}
@@ -185,9 +207,9 @@
 							<a href="write.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary" role="button">글쓰기</a>
 						</div>
 						<%}}else{%>
-							<div class="text-end" style="padding-top:10px">
+						<div class="text-end" style="padding-top:10px">
 							<a href="write.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary" role="button">글쓰기</a>
-							</div>
+						</div>
 						<%} %>
 					</div>
 					

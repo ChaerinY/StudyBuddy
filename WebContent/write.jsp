@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter" %>
+<%@ page import="enrol.EnrolDAO" %>
 <% request.setCharacterEncoding("UTF-8"); %>
 
 <!DOCTYPE html>
@@ -57,7 +58,19 @@
 			script.println("alert('잘못된 접근입니다.')");
 			script.println("location.href = 'main.jsp;'");  
 			script.println("</script>");
+		}else if(roomID != 0){		// 권한이 없는데 생성된 스터디룸에 접근하려 할 때
+			EnrolDAO enrolDAO = new EnrolDAO();
+			int auth = enrolDAO.getAuth(roomID, userID);	// roomID, userID의 값이 정확하게 있어야 함
+			
+			if(auth == -1){  
+				PrintWriter script = response.getWriter();
+				script.println("<script>");
+				script.println("alert('잘못된 접근입니다.')");
+				script.println("location.href = 'main.jsp;'");  
+				script.println("</script>");
+			}
 		}
+		
 				
 	%>
 

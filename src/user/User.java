@@ -1,9 +1,9 @@
 package user;
 
-// µ¥ÀÌÅÍ¸¦ Ã³¸®ÇÏ°í °ü¸®ÇÏ´Â ±â¹ý -> JAVA Beans
+// ë°ì´í„°ë¥¼ ì²˜ë¦¬í•˜ê³  ê´€ë¦¬í•˜ëŠ” ê¸°ë²• -> JAVA Beans
 public class User {
 	
-	/* µ¥ÀÌÅÍº£ÀÌ½º ³»¿¡¼­ ¸¸µç ÄÃ·³°ú Å¸ÀÔ ±×´ë·Î º¯¼ö ¼±¾ð 
+	/* ë°ì´í„°ë² ì´ìŠ¤ ë‚´ì—ì„œ ë§Œë“  ì»¬ëŸ¼ê³¼ íƒ€ìž… ê·¸ëŒ€ë¡œ ë³€ìˆ˜ ì„ ì–¸ 
 	create table userlist (
     	userID VARCHAR(20) primary KEY,
     	userPassword VARCHAR(20),
@@ -17,7 +17,7 @@ public class User {
     private String userName;
     private String userEmail;
     
-    // ¿À¸¥ÂÊ ¸¶¿ì½º > Source > Generate Getter & Setter > Select All > Finish 
+    // ì˜¤ë¥¸ìª½ ë§ˆìš°ìŠ¤ > Source > Generate Getter & Setter > Select All > Finish 
 	public String getUserID() {
 		return userID;
 	}
