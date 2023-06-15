@@ -1,3 +1,5 @@
+2023.06.04
+
 	create table userlist (
     	userID VARCHAR(20) primary KEY,
     	userPassword VARCHAR(20),
@@ -152,10 +154,24 @@ recruit_View.jsp > recruit_view.jsp 오타수정
 
 
 -------------------------
-0615 수정사항
+20230615 수정사항
 
-createAction.jsp 33줄-40줄
-절대경로로 인한 오류(제 컴퓨터에선 위치가 다르니..)
+테이블 업데이트 사항: 오라클에서
+ALTER TABLE room ADD filename VARCHAR2(100);
+혹은
+	drop table room;
+	create table room (
+    	roomID INT PRIMARY KEY,
+    	hostID VARCHAR2(20),    
+    	roomName NVARCHAR2(50),       
+    	roomContent NVARCHAR2(2000),    
+    	maximum INT,
+        filename VARCHAR2(100)
+	); 
+쿼리문 실행 필요 (스터디 대표이미지 저장을 위한 filename열 추가)
+
+- createAction.jsp 33줄-40줄
+절대경로로 인한 오류(각자 컴퓨터에선 폴더 위치가 다르니..)
 절대경로에서 상대경로로 수정
 
 (* 참고용 설명:
@@ -167,3 +183,4 @@ String rootDirectory = request.getServletContext().getRealPath("/");
 System.out.println("Root directory: " + rootDirectory);
 위 코드 돌려봤을때 저의 경우는 아래와 같이 출력됨(임시 디렉토리의 루트 디렉토리)
 Root directory: D:\school\InternetDB\projects\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\StudyBuddy\
+
