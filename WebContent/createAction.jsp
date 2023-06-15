@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+<%@ page import="com.oreilly.servlet.*" %>
+<%@ page import="com.oreilly.servlet.MultipartRequest" %>
+<%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
 <%@ page import="java.util.Random" %>
 <%@ page import="room.RoomDAO" %>  
 <%@ page import="enrol.EnrolDAO" %>  
@@ -12,6 +14,7 @@
 <jsp:setProperty name="room" property="roomName"/>		<!-- 로그인페이지에서 넘겨준 값들을 삽입 -->
 <jsp:setProperty name="room" property="roomContent"/>
 <jsp:setProperty name="room" property="maximum"/>     <!-- 모든 값들을 전달받음 -->
+<jsp:setProperty name="room" property="fileName"/>     <!-- 모든 값들을 전달받음 -->
 
 <!DOCTYPE html>
 <html>
@@ -21,9 +24,21 @@
 </head>
 <body>
 	<%
-	
 	String userID = null;
 	String userName = null;
+	
+	//파일 설정
+	 String saveDirectory = "C:/jsp-work/StudyBuddy/WebContent/upload/";	//업로드한 이미지가 저장될 디렉토리
+	 int maxPostSize = 10 * 1024 * 1024; // 최대 업로드 파일 크기(10MB로 설정)
+	 String encoding = "UTF-8"; // 인코딩 타입
+	 
+	//form으로부터 값 받아옴
+	MultipartRequest multipartRequest = new MultipartRequest(request, saveDirectory, maxPostSize, encoding, new DefaultFileRenamePolicy());
+	String roomName = multipartRequest.getParameter("roomName");
+	String roomContent = multipartRequest.getParameter("roomContent");
+	Integer Maximum =  Integer.parseInt(multipartRequest.getParameter("maximum"));
+	String fileName = multipartRequest.getFilesystemName("imgfile");
+
 	
 	if(session.getAttribute("userID")!= null){      //세션을 확인해서 userid의 세션이 존재하는 회원들은 userID에  세션값을 담을수 있도록
 		userID=(String) session.getAttribute("userID");
@@ -38,7 +53,7 @@
 		script.println("</script>");
 	}
 	else {  //로그인이 되어있다면
-		if (room.getRoomName() == null || room.getRoomContent() == null || room.getMaximum() <= 0 ) {
+		if (roomName == null || roomContent == null || Maximum <= 0 ) {
 			PrintWriter script = response.getWriter();
 			script.println("<script>");
 			script.println("alert('입력되지 않은 사항이 있습니다.')");
@@ -49,6 +64,7 @@
 
 			RoomDAO roomDAO = new RoomDAO();
 			Random random = new Random();
+			
 
 			int roomID;
 			do {
@@ -61,8 +77,8 @@
 			if(session.getAttribute("userID")!= null){
 				hostID=(String) session.getAttribute("userID");
 			}
-				
-			int result = roomDAO.create(roomID, hostID, room.getRoomName(), room.getRoomContent(), room.getMaximum()) ;
+
+			int result = roomDAO.create(roomID, hostID, roomName, roomContent, Maximum, fileName) ;
 			
 			if(result == -1) {   //db오류
 				PrintWriter script = response.getWriter();
