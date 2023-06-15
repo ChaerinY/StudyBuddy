@@ -3,6 +3,7 @@
 <%@ page import="com.oreilly.servlet.*" %>
 <%@ page import="com.oreilly.servlet.MultipartRequest" %>
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
+    
 <%@ page import="java.util.Random" %>
 <%@ page import="room.RoomDAO" %>  
 <%@ page import="enrol.EnrolDAO" %>  
@@ -25,11 +26,11 @@
 </head>
 <body>
 	<%
+	
 	String userID = null;
 	String userName = null;
-	
-	//파일 설정
 
+	//파일 설정
 	String relativePath = "/upload/";       //상대경로
 	String saveDirectory = request.getServletContext().getRealPath(relativePath);      //getServletContext() -> 루트디렉토리 가져옴
 	
@@ -74,9 +75,8 @@
 
 			RoomDAO roomDAO = new RoomDAO();
 			Random random = new Random();
-			
 
-			int roomID;
+			int roomID = -1;
 			do {
 			    roomID = random.nextInt(100000);       //랜덤으로 roomID생성
 			} while(roomDAO.checkExists(roomID));      //roomID 존재여부 체크후 존재한다면 다시 랜덤으로 돌림
@@ -87,7 +87,7 @@
 			if(session.getAttribute("userID")!= null){
 				hostID=(String) session.getAttribute("userID");
 			}
-
+				
 			int result = roomDAO.create(roomID, hostID, roomName, roomContent, Maximum, fileName) ;
 			
 			if(result == -1) {   //db오류
@@ -114,7 +114,7 @@
 				
 				PrintWriter script = response.getWriter();
 				script.println("<script>");
-				script.println("location.href = 'mystudy.jsp'");   //스터디룸으로 이동
+				script.println("location.href = 'mystudy.jsp'");    //스터디룸으로 이동
 				script.println("</script>");
 				}
 			}

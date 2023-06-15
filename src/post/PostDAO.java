@@ -14,7 +14,7 @@ public class PostDAO {
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	
-	public PostDAO() {    //ÀÚµ¿À¸·Î µ¥ÀÌÅÍº£ÀÌ½º Ä¿³Ø¼ÇÀÌ ÀÌ·ç¾îÁú¼ö ÀÖµµ·Ï »ı¼ºÀÚ ÀÛ¼º
+	public PostDAO() {    //ìë™ìœ¼ë¡œ ë°ì´í„°ë² ì´ìŠ¤ ì»¤ë„¥ì…˜ì´ ì´ë£¨ì–´ì§ˆìˆ˜ ìˆë„ë¡ ìƒì„±ì ì‘ì„±
 		try {
 			String url="jdbc:oracle:thin:@localhost:1521";
 			String user ="scott";
@@ -28,9 +28,9 @@ public class PostDAO {
 	}
 	
 	
-	public String getDate() {    //ÀÛ¼º½Ã°¢ ºÒ·¯¿À±â
+	public String getDate() {    //ì‘ì„±ì‹œê° ë¶ˆëŸ¬ì˜¤ê¸°
 		
-		String SQL = "select to_char(sysdate, 'yyyy-mm-dd') from dual";  //ÇöÀç½Ã°£ °¡Á®¿À´Â ±¸¹®
+		String SQL = "select to_char(sysdate, 'yyyy-mm-dd HH24:MI') from dual";  //í˜„ì¬ì‹œê°„ ê°€ì ¸ì˜¤ëŠ” êµ¬ë¬¸
 		try {
 			pstmt = conn.prepareStatement(SQL);
 			rs = pstmt.executeQuery();
@@ -43,14 +43,14 @@ public class PostDAO {
 			e.printStackTrace();
 		}
 		
-		return "";   //µ¥ÀÌÅÍº£ÀÌ½º ¿À·ù
+		return "";   //ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜
 		
 	}
 	
 	
-	public int getNext(int roomID, String postType) {    //ÇØ´ç°Ô½ÃÆÇÀÇ ´ÙÀ½ ÀÎµ¦½º ¹øÈ£ °¡Á®¿À±â
+	public int getNext(int roomID, String postType) {    //í•´ë‹¹ê²Œì‹œíŒì˜ ë‹¤ìŒ ì¸ë±ìŠ¤ ë²ˆí˜¸ ê°€ì ¸ì˜¤ê¸°
 		
-		String SQL = "SELECT postIndex FROM posts WHERE roomID = ? AND postType= ? ORDER BY postIndex DESC";  //Á¦ÀÏ ÃÖ±Ù °Ô½Ã±Û ¹øÈ£
+		String SQL = "SELECT postIndex FROM posts WHERE roomID = ? AND postType= ? ORDER BY postIndex DESC";  //ì œì¼ ìµœê·¼ ê²Œì‹œê¸€ ë²ˆí˜¸
 		try {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, roomID);
@@ -60,22 +60,21 @@ public class PostDAO {
 			if(rs.next()) {
 				return rs.getInt(1)+1;
 			}
-			return 1;   //Ã¹ °Ô½Ã¹°ÀÎ °æ¿ì
+			return 1;   //ì²« ê²Œì‹œë¬¼ì¸ ê²½ìš°
 			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return -1;   //µ¥ÀÌÅÍº£ÀÌ½º ¿À·ù
+		return -1;   //ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜
 	}
 	
 	public int write(int roomID, String postType, String postTitle, String userID, String postContent, String userName) {    
 		
-		// postid, roomid, userid, posttype, title, content, date, username, postindex ¼øÀ¸·Î »ğÀÔ
+		// postid, roomid, userid, posttype, title, content, date, username, postindex ìˆœìœ¼ë¡œ ì‚½ì…
 		String SQL = "INSERT INTO posts VALUES (post_seq.nextval,?,?,?,?,?,?,?,?)";  
 		try {
-			
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, roomID);
 			
@@ -93,7 +92,7 @@ public class PostDAO {
 			e.printStackTrace();
 		}
 		
-		return -1;   //µ¥ÀÌÅÍº£ÀÌ½º ¿À·ù. ÀÎ¼­Æ®¹®Àº ¼º°øÀûÀ¸·Î insertÇßÀ»¶§´Â 0ÀÌ»óÀÇ °á°ú ¹İÈ¯, ½ÇÆĞ½Ã -1 ¹İÈ¯
+		return -1;   //ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜. ì¸ì„œíŠ¸ë¬¸ì€ ì„±ê³µì ìœ¼ë¡œ insertí–ˆì„ë•ŒëŠ” 0ì´ìƒì˜ ê²°ê³¼ ë°˜í™˜, ì‹¤íŒ¨ì‹œ -1 ë°˜í™˜
 	}
 	
 	
@@ -115,7 +114,7 @@ public class PostDAO {
 				
 				Post post = new Post();
 				
-				//postid, roomid, userid, posttype, title, content, date, username, postindex ¼ø
+				//postid, roomid, userid, posttype, title, content, date, username, postindex ìˆœ
 				post.setPostID(rs.getInt(1));
 				post.setRoomID(rs.getInt(2));
 				post.setUserID(rs.getString(3));
@@ -149,7 +148,7 @@ public class PostDAO {
 			
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				return true;            //Æ¯Á¤ÆäÀÌÁö°¡ Á¸ÀçÇÏ³Ä?
+				return true;            //íŠ¹ì •í˜ì´ì§€ê°€ ì¡´ì¬í•˜ëƒ?
 			}
 			
 		} catch (Exception e) {
@@ -158,13 +157,13 @@ public class PostDAO {
 		return false;
 	}
 	
-	public Post getPost(int roomID, String postType, int postIndex) {   //°Ô½Ã±Û Á¤º¸¸¦ °¡Á®¿È
+	public Post getPost(int roomID, String postType, int postIndex) {   //ê²Œì‹œê¸€ ì •ë³´ë¥¼ ê°€ì ¸ì˜´
 		
 		String SQL = "SELECT * FROM posts WHERE postIndex = ? AND roomID = ? AND postType = ?"; 
 		
 		try {
 			
-			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, postIndex);
 			pstmt.setInt(2, roomID);
 			pstmt.setString(3, postType);
@@ -173,7 +172,7 @@ public class PostDAO {
 			if (rs.next()) {
 				Post post = new Post();
 				
-				//postid, roomid, userid, posttype, title, content, date, username, postindex ¼ø
+				//postid, roomid, userid, posttype, title, content, date, username, postindex ìˆœ
 				post.setPostID(rs.getInt(1));
 				post.setRoomID(rs.getInt(2));
 				post.setUserID(rs.getString(3));
@@ -194,6 +193,44 @@ public class PostDAO {
 		
 	}
 	
+	public ArrayList<Post> getSearchList(int roomID, String postType, String searchOption, String searchBBS) {	// ì›í•˜ëŠ” ì˜µì…˜ìœ¼ë¡œ ê²Œì‹œíŒ ê²€ìƒ‰
+		
+		String SQL = "SELECT * FROM posts WHERE "+searchOption+" Like ? AND roomID = ? AND postType = ? ORDER BY postIndex DESC"; 
+		ArrayList<Post> list = new ArrayList<Post>();
+		
+		try {
+			
+			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, '%'+searchBBS+'%');
+			pstmt.setInt(2, roomID);
+			pstmt.setString(3, postType);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				
+				Post post = new Post();
+				
+				//postid, roomid, userid, posttype, title, content, date, username, postindex ìˆœ
+				post.setPostID(rs.getInt(1));
+				post.setRoomID(rs.getInt(2));
+				post.setUserID(rs.getString(3));
+				post.setPostType(rs.getString(4));
+				post.setPostTitle(rs.getString(5));
+				post.setPostContent(rs.getString(6));
+				post.setPostDate(rs.getString(7));
+				post.setUserName(rs.getString(8));
+				post.setPostIndex(rs.getInt(9));
+				
+				list.add(post);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
 	public int update(int roomID, String postType, int postIndex, String postTitle, String postContent) {    
 		
 		String SQL = "UPDATE posts SET postTitle=? , postContent=? WHERE roomID=? AND postType=? AND postIndex=?";  
@@ -212,14 +249,14 @@ public class PostDAO {
 			e.printStackTrace();
 		}
 		
-		return -1;   //µ¥ÀÌÅÍº£ÀÌ½º ¿À·ù. ¼º°øÀûÀ¸·Î updateÇßÀ»¶§´Â 0ÀÌ»óÀÇ °á°ú ¹İÈ¯, ½ÇÆĞ½Ã -1 ¹İÈ¯
+		return -1;   //ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜. ì„±ê³µì ìœ¼ë¡œ updateí–ˆì„ë•ŒëŠ” 0ì´ìƒì˜ ê²°ê³¼ ë°˜í™˜, ì‹¤íŒ¨ì‹œ -1 ë°˜í™˜
 	}
 	
 	public int delete(int roomID, String postType, int postIndex) {
 		
 		
 		String SQL = "delete from posts where roomID=? AND postType=? AND postIndex=?"; 
-		//Æ÷½ºÆ® ·¹ÄÚµå »èÁ¦
+		//í¬ìŠ¤íŠ¸ ë ˆì½”ë“œ ì‚­ì œ
 		
 		try {
 			
@@ -229,7 +266,7 @@ public class PostDAO {
 			pstmt.setInt(3, postIndex);
 			pstmt.executeUpdate();
 			
-			String SQL2 = "update posts set postIndex = ROWNUM where roomID=? AND postType=?";    //ÇØ´ç °Ô½ÃÆÇÀÇ postIndex ÀçÁ¤·Ä
+			String SQL2 = "update posts set postIndex = ROWNUM where roomID=? AND postType=?";    //í•´ë‹¹ ê²Œì‹œíŒì˜ postIndex ì¬ì •ë ¬
 			PreparedStatement pstmt2 = conn.prepareStatement(SQL2);
 			pstmt2.setInt(1, roomID);
 			pstmt2.setString(2, postType);
@@ -240,7 +277,7 @@ public class PostDAO {
 			e.printStackTrace();
 		}
 		
-		return -1;   //µ¥ÀÌÅÍº£ÀÌ½º ¿À·ù. 
+		return -1;   //ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜. 
 		
 	}
 }

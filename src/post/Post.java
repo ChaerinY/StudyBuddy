@@ -4,15 +4,15 @@ public class Post {
 
 	/*
 	create table posts (
-    postID INT PRIMARY KEY,     //Æ÷½ºÆ® °íÀ¯¾ÆÀÌµð
+    postID INT PRIMARY KEY,     //í¬ìŠ¤íŠ¸ ê³ ìœ ì•„ì´ë””
     roomID INT,
     userID VARCHAR(20),
-    postType VARCHAR(20),         //Ä«Å×°í¸®. ¸ðÁý°Ô½ÃÆÇ/°øÁö»çÇ×/°úÁ¦°Ô½ÃÆÇ/Q&A°Ô½ÃÆÇ/ÀÚÀ¯°Ô½ÃÆÇ
-    postTitle NVARCHAR2(50),     //Á¦ÇÑ 50ÀÚÀÌ³»
-    postContent NVARCHAR2(2000),     //Á¦ÇÑ 2000ÀÚÀÌ³»
+    postType VARCHAR(20),         //ì¹´í…Œê³ ë¦¬. ëª¨ì§‘ê²Œì‹œíŒ/ê³µì§€ì‚¬í•­/ê³¼ì œê²Œì‹œíŒ/Q&Aê²Œì‹œíŒ/ìžìœ ê²Œì‹œíŒ
+    postTitle NVARCHAR2(50),     //ì œí•œ 50ìžì´ë‚´
+    postContent NVARCHAR2(2000),     //ì œí•œ 2000ìžì´ë‚´
     postDate VARCHAR(20),
-    userName VARCHAR(20),    // ÀÛ¼ºÀÚ¶õ¿¡ id´ë½Å ´Ð³×ÀÓ Ç¥½ÃÇÏ±âÀ§ÇØ
-    postIndex INT          //°¢°Ô½ÃÆÇ ¾È¿¡¼­ÀÇ ÀÎµ¦½º
+    userName VARCHAR(20),    // ìž‘ì„±ìžëž€ì— idëŒ€ì‹  ë‹‰ë„¤ìž„ í‘œì‹œí•˜ê¸°ìœ„í•´
+    postIndex INT          //ê°ê²Œì‹œíŒ ì•ˆì—ì„œì˜ ì¸ë±ìŠ¤
 	); 
 	 */
 	

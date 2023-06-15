@@ -6,19 +6,17 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import post.Post;
-
 public class UserDAO {
 
 
-	//DAO¶õ µ¥ÀÌÅÍº£ÀÌ½º Á¢±Ù °´Ã¼ÀÇ ¾àÀÚ·Î¼­ ½ÇÁúÀûÀ¸·Î µ¥ÀÌÅÍº£ÀÌ½º¿¡¼­ È¸¿øÁ¤º¸¸¦ ºÒ·¯¿À°Å³ª Á¤º¸¸¦ ³Ö°íÀÚÇÒ¶§ ÀÌ¿ëÇÏ´Â ¿ÀºêÁ§Æ®
+	//DAOë€ ë°ì´í„°ë² ì´ìŠ¤ ì ‘ê·¼ ê°ì²´ì˜ ì•½ìë¡œì„œ ì‹¤ì§ˆì ìœ¼ë¡œ ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ íšŒì›ì •ë³´ë¥¼ ë¶ˆëŸ¬ì˜¤ê±°ë‚˜ ì •ë³´ë¥¼ ë„£ê³ ìí• ë•Œ ì´ìš©í•˜ëŠ” ì˜¤ë¸Œì íŠ¸
 
 
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 	
-	public UserDAO() {    //ÀÚµ¿À¸·Î µ¥ÀÌÅÍº£ÀÌ½º Ä¿³Ø¼ÇÀÌ ÀÌ·ç¾îÁú¼ö ÀÖµµ·Ï »ı¼ºÀÚ ÀÛ¼º
+	public UserDAO() {    //ìë™ìœ¼ë¡œ ë°ì´í„°ë² ì´ìŠ¤ ì»¤ë„¥ì…˜ì´ ì´ë£¨ì–´ì§ˆìˆ˜ ìˆë„ë¡ ìƒì„±ì ì‘ì„±
 		try {
 			String url="jdbc:oracle:thin:@localhost:1521";
 			String user ="scott";
@@ -31,31 +29,31 @@ public class UserDAO {
 		}
 	}
 	
-	public int login(String userID, String userPassword) {       //·Î±×ÀÎÇÏ´Â ÇÔ¼ö
+	public int login(String userID, String userPassword) {       //ë¡œê·¸ì¸í•˜ëŠ” í•¨ìˆ˜
 		String SQL = "SELECT userPassword FROM userlist WHERE userID = ?";
 		
 		try {
 			pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, userID);    // Ã¹¹øÂ°ÀÚ¸® ¹°À½Ç¥¿¡ userID »ğÀÔ
-			rs = pstmt.executeQuery();     //Äõ¸®¹® ½ÇÇà
-			if(rs.next()) {              //userID Á¸ÀçÇÏ¸é
-				if(rs.getString(1).equals(userPassword)) {     //ºñ¹Ğ¹øÈ£ ÀÏÄ¡ÇÏ¸é
-					return 1;    //·Î±×ÀÎ ¼º°ø
+			pstmt.setString(1, userID);    // ì²«ë²ˆì§¸ìë¦¬ ë¬¼ìŒí‘œì— userID ì‚½ì…
+			rs = pstmt.executeQuery();     //ì¿¼ë¦¬ë¬¸ ì‹¤í–‰
+			if(rs.next()) {              //userID ì¡´ì¬í•˜ë©´
+				if(rs.getString(1).equals(userPassword)) {     //ë¹„ë°€ë²ˆí˜¸ ì¼ì¹˜í•˜ë©´
+					return 1;    //ë¡œê·¸ì¸ ì„±ê³µ
 				}
 				else
-					return 0;   //ºñ¹Ğ¹øÈ£ ºÒÀÏÄ¡
+					return 0;   //ë¹„ë°€ë²ˆí˜¸ ë¶ˆì¼ì¹˜
 			}
-			return -1;  //¾ÆÀÌµğ°¡ ¾øÀ½
+			return -1;  //ì•„ì´ë””ê°€ ì—†ìŒ
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return -2; //µ¥ÀÌÅÍº£ÀÌ½º ¿À·ù
+		return -2; //ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜
 	}
 	
 	
-	// »ç¿ëÀÚ¸¦ Ãß°¡ÇÏ´Â ÇÔ¼ö
+	// ì‚¬ìš©ìë¥¼ ì¶”ê°€í•˜ëŠ” í•¨ìˆ˜
 	
 	public int join(User user) {
 		
@@ -65,14 +63,14 @@ public class UserDAO {
 			pstmt.setString(1, user.getUserID());
 			pstmt.setString(2, user.getUserPassword());
 			pstmt.setString(3, user.getUserName());
-			pstmt.setString(4, user.getUserEmail());    //°¢ ¹°À½Ç¥ À§Ä¡¿¡ »ğÀÔ
+			pstmt.setString(4, user.getUserEmail());    //ê° ë¬¼ìŒí‘œ ìœ„ì¹˜ì— ì‚½ì…
 			
-			return pstmt.executeUpdate();  //Äõ¸®¹® ½ÇÇà. ¼º°ø½Ã 0ÀÌ»óÀ» ¹İÈ¯
+			return pstmt.executeUpdate();  //ì¿¼ë¦¬ë¬¸ ì‹¤í–‰. ì„±ê³µì‹œ 0ì´ìƒì„ ë°˜í™˜
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return -1; //µ¥ÀÌÅÍº£ÀÌ½º¿À·ù
+		return -1; //ë°ì´í„°ë² ì´ìŠ¤ì˜¤ë¥˜
 	}
 	
 	public String searchName(String userID) {
@@ -80,7 +78,7 @@ public class UserDAO {
 		
 		try {
 			pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, userID);    // Ã¹¹øÂ°ÀÚ¸® ¹°À½Ç¥¿¡ userID »ğÀÔ
+			pstmt.setString(1, userID);    // ì²«ë²ˆì§¸ìë¦¬ ë¬¼ìŒí‘œì— userID ì‚½ì…
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				String name = rs.getString(1);
@@ -91,10 +89,10 @@ public class UserDAO {
 			e.printStackTrace();
 		}
 		
-		return null; // ¾ø°Å³ª µ¥ÀÌÅÍº£ÀÌ½º ¿À·ù
+		return null; // ì—†ê±°ë‚˜ ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜
 	}
 	
-	public User getUser(String userID) {              //¾ÆÀÌµğ °Ë»öÀ¸·Î À¯Àú Á¤º¸ °¡Á®¿È
+	public User getUser(String userID) {              //ì•„ì´ë”” ê²€ìƒ‰ìœ¼ë¡œ ìœ ì € ì •ë³´ ê°€ì ¸ì˜´
 		String SQL = "SELECT * FROM userlist WHERE userID = ?";
 		
 		try {
@@ -106,7 +104,7 @@ public class UserDAO {
 			if (rs.next()) {
 				User user = new User();
 				
-		    	// userID userPassword userName userEmail ¼ø
+		    	// userID userPassword userName userEmail ìˆœ
 				user.setUserID(rs.getString(1));
 				user.setUserPassword(rs.getString(2));
 				user.setUserName(rs.getString(3));
@@ -129,46 +127,70 @@ public class UserDAO {
 			pstmt.setString(1, userPass);
 			pstmt.setString(2, userName);
 			pstmt.setString(3, userEmail);
-			pstmt.setString(4, userID);    //°¢ ¹°À½Ç¥ À§Ä¡¿¡ »ğÀÔ
+			pstmt.setString(4, userID);    //ê° ë¬¼ìŒí‘œ ìœ„ì¹˜ì— ì‚½ì…
 			
-			return pstmt.executeUpdate();  //Äõ¸®¹® ½ÇÇà. ¼º°ø½Ã 0ÀÌ»óÀ» ¹İÈ¯
+			pstmt.executeUpdate();  //ì¿¼ë¦¬ë¬¸ ì‹¤í–‰. ì„±ê³µì‹œ 0ì´ìƒì„ ë°˜í™˜
+			
+			String SQL2 = "update posts set userName=? where userID=?";
+			PreparedStatement pstmt2 = conn.prepareStatement(SQL2);
+			pstmt2.setString(1, userName);
+			pstmt2.setString(2,  userID);
+			pstmt2.executeUpdate();
+			
+			String SQL3 = "update comments set userName=? where userID=?";
+			PreparedStatement pstmt3 = conn.prepareStatement(SQL3);
+			pstmt3.setString(1,  userName);
+			pstmt3.setString(2,  userID);
+	
+			return pstmt3.executeUpdate(); 
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return -1; //µ¥ÀÌÅÍº£ÀÌ½º¿À·ù
+		return -1; //ë°ì´í„°ë² ì´ìŠ¤ì˜¤ë¥˜
 	}
 	
 	public int delete(String userID) {
 		
 		
-		String SQL = "update posts set userName=?, userID=? where userID=?";    //Å»ÅğÇÒ È¸¿øÀÇ °Ô½Ã±ÛÀÇ ´Ğ³×ÀÓ°ú ¾ÆÀÌµğ¸¦ Å»ÅğÈ¸¿øÀ¸·Î º¯°æ
+		String SQL = "update posts set userName=?, userID=? where userID=?";    //íƒˆí‡´í•  íšŒì›ì˜ ê²Œì‹œê¸€ì˜ ë‹‰ë„¤ì„ê³¼ ì•„ì´ë””ë¥¼ íƒˆí‡´íšŒì›ìœ¼ë¡œ ë³€ê²½
 		
 		try {
 			
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
-			pstmt.setString(1, "(Å»ÅğÈ¸¿ø)");
+			pstmt.setString(1, "(íƒˆí‡´íšŒì›)");
 			pstmt.setString(2, "-");
 			pstmt.setString(3, userID);
 			pstmt.executeUpdate();
 			
-			String SQL2 = "delete from enrol where userID=?";        //Å»ÅğÈ¸¿øÀº ÀÚµ¿À¸·Î °¡ÀÔÇß´ø ½ºÅÍµğ±×·ìµéµµ Å»Åğ
+			String SQL2 = "update comments set userName=?, userID=? where userID=?";
 			PreparedStatement pstmt2 = conn.prepareStatement(SQL2);
-			pstmt2.setString(1, userID);
+			pstmt2.setString(1, "(íƒˆí‡´íšŒì›)");
+			pstmt2.setString(2, "-");
+			pstmt2.setString(3, userID);
 			pstmt2.executeUpdate();
 			
-			String SQL3 = "delete from userlist where userID=?";     //È¸¿øÁ¤º¸ »èÁ¦
+			String SQL3 = "delete from room where hostID=?";
 			PreparedStatement pstmt3 = conn.prepareStatement(SQL3);
 			pstmt3.setString(1, userID);
+			pstmt3.executeUpdate();
 			
-			return pstmt3.executeUpdate();
+			String SQL4 = "delete from enrol where userID=?";        //íƒˆí‡´íšŒì›ì€ ìë™ìœ¼ë¡œ ê°€ì…í–ˆë˜ ìŠ¤í„°ë””ê·¸ë£¹ë“¤ë„ íƒˆí‡´
+			PreparedStatement pstmt4 = conn.prepareStatement(SQL4);
+			pstmt4.setString(1, userID);
+			pstmt4.executeUpdate();
+			
+			String SQL5 = "delete from userlist where userID=?";     //íšŒì›ì •ë³´ ì‚­ì œ
+			PreparedStatement pstmt5 = conn.prepareStatement(SQL5);
+			pstmt5.setString(1, userID);
+			
+			return pstmt5.executeUpdate();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return -1;   //µ¥ÀÌÅÍº£ÀÌ½º ¿À·ù. 
+		return -1;   //ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜. 
 		
 	}
-	
 }

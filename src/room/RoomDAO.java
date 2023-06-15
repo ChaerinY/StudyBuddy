@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import post.Post;
 
 public class RoomDAO {
 
@@ -30,6 +29,7 @@ public class RoomDAO {
 	
 	public int create(int roomID, String hostID, String roomName, String roomContent, int maximum, String fileName) {    
 		
+
 		String SQL = "INSERT INTO room VALUES (?, ?, ?, ?, ?, ?)";  
 		try {
 
@@ -40,7 +40,7 @@ public class RoomDAO {
 			pstmt.setString(4, roomContent);
 			pstmt.setInt(5, maximum);
 			pstmt.setString(6, fileName);
-			
+
 			return pstmt.executeUpdate();
 			
 		} catch (Exception e) {
@@ -82,7 +82,7 @@ public ArrayList<Room> getList(String userID) {
 
 public ArrayList<Room> getMyList(String userID) {
 	
-	String SQL = "SELECT roomid,hostid,roomname,roomcontent,maximum,filename FROM room NATURAL JOIN enrol WHERE userid=?"; 
+	String SQL = "SELECT roomid,hostid,roomname,roomcontent,maximum,filename FROM room NATURAL JOIN enrol WHERE userid=?";  
 	ArrayList<Room> list = new ArrayList<Room>();
 	
 	try {
@@ -102,6 +102,7 @@ public ArrayList<Room> getMyList(String userID) {
 			room.setRoomContent(rs.getString(4));
 			room.setMaximum(rs.getInt(5));
 			room.setFileName(rs.getString(6));
+			
 			list.add(room);
 		}
 		
@@ -111,7 +112,7 @@ public ArrayList<Room> getMyList(String userID) {
 	return list;
 }
 
-// searchRoom´ë½Å getroomÀ¸·Î ¼öÁ¤
+// searchRoomëŒ€ì‹  getroomìœ¼ë¡œ ìˆ˜ì •
 
 //public ArrayList<Room> searchRoom(Integer roomID) {
 //	
@@ -182,7 +183,7 @@ public boolean checkExists(int roomID) {
 		
 		rs = pstmt.executeQuery();
 		if(rs.next()){
-			return true;          //ÇØ´ç roomID¸¦ °¡Áø ½ºÅÍµğ·ëÀÌ Á¸Àç
+			return true;          //í•´ë‹¹ roomIDë¥¼ ê°€ì§„ ìŠ¤í„°ë””ë£¸ì´ ì¡´ì¬
 		}
 	} catch(Exception e){
 	e.printStackTrace();
@@ -190,7 +191,7 @@ public boolean checkExists(int roomID) {
 	return false;
 }
 
-public int maxMemberNum(int roomID) {        //ÇØ´ç ½ºÅÍµğ·ëÀÇ ÃÖ´ëÀÎ¿ø¼ö ¸®ÅÏ
+public int maxMemberNum(int roomID) {        //í•´ë‹¹ ìŠ¤í„°ë””ë£¸ì˜ ìµœëŒ€ì¸ì›ìˆ˜ ë¦¬í„´
 	
 	String SQL = "SELECT maximum FROM room WHERE roomID=?";    
 	
@@ -209,5 +210,17 @@ public int maxMemberNum(int roomID) {        //ÇØ´ç ½ºÅÍµğ·ëÀÇ ÃÖ´ëÀÎ¿ø¼ö ¸®ÅÏ
 	}
 	return -1;
 }
+
+	public int delete(int roomID) {
+		String SQL = "delete from room where roomID=?"; 
+		try {
+			PreparedStatement pstmt=conn.prepareStatement(SQL);
+			pstmt.setInt(1, roomID);
+			return pstmt.executeUpdate();			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1;//ë°ì´í„°ë² ì´ìŠ¤ ì˜¤ë¥˜
+	}
 
 }

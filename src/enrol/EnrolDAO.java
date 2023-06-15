@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-
-import enrol.Enrol;
-import room.Room;
 
 public class EnrolDAO {
 
@@ -33,7 +29,7 @@ public class EnrolDAO {
 		String SQL = "INSERT INTO enrol VALUES (?,?,?)";  
 		try {
 			
-			PreparedStatement pstmt = conn.prepareStatement(SQL);
+			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, roomID);
 			pstmt.setString(2, userID);
 			pstmt.setInt(3, auth);
@@ -47,18 +43,50 @@ public class EnrolDAO {
 		return -1;
 	}
 	
-	
-	public int delete(int roomID,  String userID, int auth) {
+	public int getAuth(int roomID, String userID){	// ìŠ¤í„°ë””ë£¸ì— ëŒ€í•œ ìœ ì €ì˜ ê¶Œí•œ
 		
-		//±ÇÇÑÀÌ 0ÀÎ È¸¿ø¸¸
-		//¹ÌÀÛ¼º
-
+		String SQL = "SELECT auth FROM enrol WHERE roomID=? AND userID=?";
 		
+		try{
+			
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, roomID);
+			pstmt.setString(2, userID);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()){
+				
+				int result = rs.getInt(1);
+		
+				return result;
+			}
+		} catch(Exception e){
+		e.printStackTrace();
+		}
 		return -1;
-		
 	}
 	
-	public int memberNum(int roomID) {       //ÇØ´ç ½ºÅÍµğ·ë¿¡ ÇöÀç °¡ÀÔÇÑ ÀÎ¿ø¼ö
+	
+	public int withdrawal(int roomID,  String userID, int auth) {	// íƒˆí‡´í•˜ê¸°
+		
+		String SQL = "DELETE FROM enrol WHERE roomID=? AND userID=? AND auth=?";
+		try {
+			
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, roomID);
+			pstmt.setString(2, userID);
+			pstmt.setInt(3, auth);
+		
+			return pstmt.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	
+	public int memberNum(int roomID) {       //	í•´ë‹¹ ìŠ¤í„°ë””ë£¸ì— í˜„ì¬ ê°€ì…í•œ ì¸ì›ìˆ˜
 		String SQL = "select count(*) from enrol where roomid=?";  
 		try {
 			
@@ -71,8 +99,6 @@ public class EnrolDAO {
 		
 				return result;
 			}
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

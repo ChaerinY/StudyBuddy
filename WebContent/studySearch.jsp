@@ -3,8 +3,6 @@
 <%@ page import="java.io.PrintWriter"%>
 <%@ page import="room.RoomDAO"%>
 <%@ page import="room.Room"%>
-<%@ page import="enrol.EnrolDAO"%>
-<%@ page import="enrol.Enrol"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,6 +39,8 @@
                 style="padding-right: 30px;">
                 StudyBuddy
             </a>
+            </div>
+         </div>
       </header>
 
 
@@ -50,6 +50,7 @@
         if (request.getParameter("searchid")!=null){
         	searchid=Integer.parseInt(request.getParameter("searchid"));
         }
+        
         RoomDAO searchroomDAO=new RoomDAO(); 
 		Room rs =searchroomDAO.getRoom(searchid);     //searchRoom에서 getRoom으로 변경. ArrayList<Room>대신 Room 객체 하나만 가져옵니다
     	%>
@@ -62,7 +63,7 @@
                 <div class="card-body">
                   <h6>스터디룸ID: <%=searchid %></h6>
                   <div class="d-flex">
-                  	<% if(rs!=null){ %>               <!-- search room에서 getroom으로 바뀜에 따라 수정 -->
+                  	<% if(rs!=null && searchid!=0 ){ %>               <!-- search room에서 getroom으로 바뀜에 따라 수정, 0은 모집게시판이므로 검색에서 제외 -->
                     <img src="upload/<%= rs.getFileName()%>" alt="Image" style="width: 200px; height: 200px; margin-right: 20px;"/>
                     <div>
                         <h5 id="study_name" style="margin-top: 10px;"><%= rs.getRoomName()%></h5>

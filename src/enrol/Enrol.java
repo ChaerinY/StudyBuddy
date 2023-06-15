@@ -11,8 +11,6 @@ public class Enrol {
 	); 
 	 */
 	
-	
-	
 	private int roomID;
     private String userID;
     private int auth;

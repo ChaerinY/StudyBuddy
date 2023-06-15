@@ -1,39 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-<%@ page import="java.io.PrintWriter" %>  
+<%@ page import="java.io.PrintWriter" %>
+<%@ page import="post.PostDAO" %>  
+<%@ page import="post.Post" %>
 <%@ page import="room.RoomDAO" %>
 <%@ page import="room.Room" %>
 <%@ page import="enrol.EnrolDAO" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.ArrayList" %>    
 <% request.setCharacterEncoding("UTF-8"); %>    
+
 <!DOCTYPE html>
 <html lang="en">
 <% 
 		String userID = null;
-		String userName = null;
+		
 		if(session.getAttribute("userID")!= null){      //세션이 있으면 userID값을 가지고 없다면 null값
 			userID=(String) session.getAttribute("userID");
-			userName=(String) session.getAttribute("userName");
 		}
 		
-		if(userID == null){  //로그인이 되어있지 않다면
-			PrintWriter script = response.getWriter();
-			script.println("<script>");
-			script.println("alert('로그인을 하세요.')");
-			script.println("location.href = 'login.jsp;'");   //로그인페이지로 이동
-			script.println("</script>");
-		}
+		int roomID = -1;
+		String postType = null;
 		
-		int roomID = -1; // -1은 존재하지 않음
-		
-		if (request.getParameter("roomID") != null)
+		// 룸 메인페이지 연결
+		if (request.getParameter("roomID") != null && request.getParameter("postType") != null){
 			roomID = Integer.parseInt(request.getParameter("roomID"));
+			postType = request.getParameter("postType");
+		}
 		
 		EnrolDAO enrolDAO = new EnrolDAO();
-		int auth = enrolDAO.getAuth(roomID, userID);
+		int auth = enrolDAO.getAuth(roomID, userID); // 방장이나 회원만 열람 가능
 		
-		if(roomID == -1 || auth == -1){  
+		if(roomID == -1 || postType == null || auth == -1){  
 			PrintWriter script = response.getWriter();
 			script.println("<script>");
 			script.println("alert('잘못된 접근입니다.')");
@@ -41,9 +39,24 @@
 			script.println("</script>");
 		}
 		
-		Room room = new RoomDAO().getRoom(roomID);
+		String searchOption = null;
+		String searchBBS = null;
 		
+		if ( request.getParameter("searchOption") != null && request.getParameter("searchBBS") != null ) {
+			searchOption = request.getParameter("searchOption");
+			searchBBS = request.getParameter("searchBBS");
+		}else{
+			PrintWriter script = response.getWriter();
+			script.println("<script>");
+			script.println("alert('입력되지 않은 사항이 있습니다.')");
+			script.println("history.back();");  //이전 페이지로 돌아감
+			script.println("</script>");
+		}
+		
+		Room room = new RoomDAO().getRoom(roomID);
+
 	%>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,8 +80,8 @@
 </style>
 
 </head>
-
 <body>
+
     <header class="p-3 text-bg-dark">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -112,44 +125,99 @@
             <a href="roomMain.jsp?roomID=<%=room.getRoomID()%>" class="d-flex align-items-center link-dark text-decoration-none" style="margin: 10px;">
                 <span class="fs-4" style="font-weight: bold;"><%=room.getRoomName()%></span>
             </a>
-            <hr>
-           <ul class="nav nav-pills flex-column mb-auto">
+             <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
             	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
             	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
             	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
             	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
             </ul>
+            <hr>
+            <div class="row">
+            <form method="post" action="searchBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>">
+							<table align="center" style="text-align: center; width:200px;">
+								<tr>
+									<td>
+									<select name="searchOption">
+										<option value="postTitle" selected>제목</option>
+										<option value="postContent">내용</option>
+										<option value="userName">작성자</option>
+									</select>
+									</td>
+									<td>
+										<input type="text" name="searchBBS" placeholder="검색어를 입력해주세요." style="width:wrap-content;" maxlength="30">
+									</td>
+								</tr>
+							</table>
+						</form>
+						</div>
         </div>
 
         <div class="container ms-3 mt-5" id="main">
-        	<section>
-        		<div class="d-flex justify-content-between align-items-end">
-        			<img src="upload/<%=room.getFileName()%>" style="width: 300px; height: 300px;"/>	<!--  등록한 이미지 불러오도록 -->
-        			<span style="text-align: right;">룸ID: <%=room.getRoomID()%></span>
-        		</div>
-        	</section>
 
-            <div class="bg-light p-5 rounded mt-3">
-            		<h2 style="text-align: left;"> <%=room.getRoomName()%> </h2>
-            		<p class="lead"><%=room.getRoomContent()%></p>
-            </div>
-					
-			<% if(auth == 0){%>
-			<div class="d-flex justify-content-end">
-					<a onclick="return confirm('정말로 탈퇴하시겠습니까?')" href="withdrawalAction.jsp?roomID=<%=roomID%>" class="btn btn-secondary" role="button">탈퇴하기</a>
-					<!-- 탈퇴 Action하는 곳으로 -->
-			</div>
-			<%}else{ %>
-			<div class="d-flex justify-content-end">
-					<a onclick="return confirm('정말로 삭제하시겠습니까?\n삭제된 스터디룸은 복구되지 않습니다.')"
-					href="withdrawalAction.jsp?roomID=<%=roomID%>" class="btn btn-secondary" role="button">삭제하기</a>
-					<!-- 삭제 Action하는 곳으로 -->
-			</div>
-			<%} %>
-					
-		</div>
+            <h2><%=postType%></h2>
+            <hr>
 
-       </div>
+            <!-- 이부분에 게시판 표시 -->
+            	<div class="container">
+					<div class="row">
+						<table class="table" style="text-align:center; border: 1px solid #dddddd">
+								<thead>
+			                        <tr>
+			                            <th style="width: 10%; background-color: #eeeeee; text-align: center;">번호</th>
+			                            <th style="width: 50%; background-color: #eeeeee; text-align: center;">제목</th>
+			                            <th style="width: 10%; background-color: #eeeeee; text-align: center;">작성자</th>
+			                            <th style="width: 30%; background-color: #eeeeee; text-align: center;">작성일</th>
+			                        </tr>
+			                    </thead>
+			                    <tbody id="post-list">
+			                        <!-- 게시글이 들어갈 부분 -->
+			                        
+			                    <% 
+		                        PostDAO postDAO = new PostDAO();		                        	
+		                        ArrayList<Post> list = postDAO.getSearchList(roomID, postType, searchOption, searchBBS);
+   	
+		                        if(list.size()==0){
+		                        	PrintWriter script = response.getWriter();
+		                			script.println("<script>");
+		                			script.println("alert('일치하는 내용이 존재하지 않습니다.')");
+		                			script.println("history.back();");
+		                			script.println("</script>");
+		                        }
+		                        
+		                        for (int i = 0; i < list.size(); i++){
+		                        %>		
+		                        <tr>
+		                        	<td><%= list.get(i).getPostIndex()%></td>
+		                        	<td><a href="study_View.jsp?postIndex=<%=list.get(i).getPostIndex()%>&roomID=<%= list.get(i).getRoomID()%>&postType=<%= list.get(i).getPostType()%>"><%=list.get(i).getPostTitle() %></a></td>
+		                        	<td><%= list.get(i).getUserName()%></td>
+		                        	<td><%= list.get(i).getPostDate()%></td>
+		                        </tr>
+		                        <%			
+		                        	}
+		                        %>
+			
+			                    </tbody>			
+						</table>
+						
+						<%
+						if(postType.equals("공지사항") || postType.equals("과제게시판")){		// 해당 게시판에서는 hostID만 게시글 작성 가능
+							if(userID != null && userID.equals(room.getHostID())){
+						%>
+						<div class="text-end" style="padding-top:10px">
+							<a href="write.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary" role="button">글쓰기</a>
+						</div>
+						<%}}else{%>
+							<div class="text-end" style="padding-top:10px">
+							<a href="write.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary" role="button">글쓰기</a>
+							</div>
+						<%} %>
+					</div>
+					
+				</div>
+
+        </div>
+    </div>
 
 
     <!-- 부트스트랩 JS 및 jQuery 추가 -->
