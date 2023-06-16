@@ -184,3 +184,15 @@ System.out.println("Root directory: " + rootDirectory);
 위 코드 돌려봤을때 저의 경우는 아래와 같이 출력됨(임시 디렉토리의 루트 디렉토리)
 Root directory: D:\school\InternetDB\projects\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\StudyBuddy\
 
+
+---------------------------------------------------
+20230616 수정
+
+*댓글기능 코드병합 완료
+*오라클 쿼리문파일 재정리
+
+1. studyBBS.jsp 130~147line
+검색버튼 추가
+
+2. searchBBS.jsp 136~153line
+검색버튼 추가

@@ -125,25 +125,26 @@
             	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
             	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
             </ul>
-            <hr>
-            <div class="row">
-            <form method="post" action="searchBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>">
-							<table align="center" style="text-align: center; width:200px;">
-								<tr>
-									<td>
-									<select name="searchOption">
-										<option value="postTitle" selected>제목</option>
-										<option value="postContent">내용</option>
-										<option value="userName">작성자</option>
-									</select>
-									</td>
-									<td>
-										<input type="text" name="searchBBS" placeholder="검색어를 입력해주세요." style="width:wrap-content;" maxlength="30">
-									</td>
-								</tr>
-							</table>
-						</form>
-						</div>
+            
+
+			 <div class="mt-auto">
+                <hr>
+                	<form method="post" action="searchBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>">
+                	<div style="margin-bottom: 15px;" class="d-flex justify-content-between">
+                		<span class="fs-5">게시글 검색 </span>
+                		<span></span>
+                    	<select name="searchOption">
+									<option value="postTitle" selected>제목</option>
+									<option value="postContent">내용</option>
+									<option value="userName">작성자</option>
+						</select>
+                	</div>
+                  	<div class="input-group mb-3"> 
+								<input type="text" name="searchBBS" placeholder="검색어를 입력하세요." style="width:wrap-content;" maxlength="30" class="form-control">
+	                    		<button type="submit" class="btn btn-primary">검색</button>
+                	</div>
+               </form>
+            </div>			
         </div>
 
         <div class="container ms-3 mt-5" id="main">

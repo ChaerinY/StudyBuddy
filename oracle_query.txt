@@ -6,14 +6,24 @@
 
 <oracle db 테이블 생성 쿼리>
 
-	create table userlist (
-    	userID VARCHAR(20) primary KEY,
-    	userPassword VARCHAR(20),
-    	userName VARCHAR(20),
-    	userEmail VARCHAR(50)
+/* 기존 테이블, 시퀀스 삭제후 재생성 (초기화) */
+drop table room;
+drop table enrol;
+drop table posts;
+drop table userlist;
+drop table comments;
+DROP SEQUENCE comment_seq;
+DROP SEQUENCE post_seq;
+
+
+create table userlist (
+ 	userID VARCHAR(20) primary KEY,
+ 	userPassword VARCHAR(20),
+ 	userName VARCHAR(20),
+    userEmail VARCHAR(50)
 	);
     
-    create table posts (
+create table posts (
     postID INT PRIMARY KEY,    
     roomID INT,
     userID VARCHAR(20),
@@ -25,21 +35,39 @@
     postIndex INT        
 	); 
     
-    CREATE SEQUENCE post_seq;
 
-	create table room (
-    	roomID INT PRIMARY KEY,
-    	hostID VARCHAR2(20),    
-    	roomName NVARCHAR2(50),       
-    	roomContent NVARCHAR2(2000),    
-    	maximum INT,
-		filename VARCHAR2(100)        
+create table room (
+	roomID INT PRIMARY KEY,
+	hostID VARCHAR2(20),    
+	roomName NVARCHAR2(50),       
+	roomContent NVARCHAR2(2000),    
+	maximum INT,
+	filename VARCHAR2(100)        
 	);  
 
-	CREATE TABLE ENROL (
-	  ROOMID NUMBER NOT NULL,
-	  USERID VARCHAR2(20 BYTE) NOT NULL,
-	  AUTH NUMBER DEFAULT 0,
-	  PRIMARY KEY (ROOMID, USERID)
+CREATE TABLE ENROL (
+  ROOMID NUMBER NOT NULL,
+  USERID VARCHAR2(20 BYTE) NOT NULL,
+  AUTH NUMBER DEFAULT 0,
+  PRIMARY KEY (ROOMID, USERID)
 	);
+
+    
+create table comments(
+    commentID int not null PRIMARY KEY,	
+    postID int not null,
+    userID varchar2(20 byte) not null,
+    userName varchar2(20 byte) not null,
+    commentDate varchar(20),
+    commentContent NVARCHAR2(100)
+	);
+
+CREATE SEQUENCE post_seq;
+CREATE SEQUENCE comment_seq;
+
+/*alter table comments add primary key (commentID);   -> commentID int not null PRIMARY KEY, 로 통합 */
+
+alter table comments add constraint comments foreign key (postID) references posts(postID) on delete cascade;
+alter table enrol add constraint room foreign key (roomID) references room(roomID) on delete cascade;
+alter table posts add constraint room2 foreign key (roomID) references room(roomID) on delete cascade;
 
