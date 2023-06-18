@@ -214,13 +214,18 @@
       <br>
 		<div class="container">
       		<div class="row">
-            	<form method="post" action="commentUpdateAction.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=commentID%>">
+            	<form method="post" action="commentUpdateAction.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=commentID%>"  enctype="multipart/form-data">
 				<table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
 					<tbody>
 						<input type="hidden" name="userID" value="<%=comment.getUserID()%>">
     					<input type="hidden" name="postID" value="<%=comment.getPostID()%>">
 						<tr>
-							<td><textarea class="form-control" placeholder="수정할 내용을 입력하세요." style="width: 100%;" name="commentContent" maxlength="100"><%=comment.getCommentContent() %></textarea></td>
+							<td><textarea class="form-control" placeholder="수정할 내용을 입력하세요." style="width: 100%;" name="commentContent" maxlength="100"><%=comment.getCommentContent() %></textarea>
+								<br>
+								<input type="file" class="form-control" name="uploadfile">
+									<input type="hidden" name="prefile" value="<%=comment.getFileName()%>">
+	                        
+                     		</td>
 						</tr>
 					</tbody>
 				</table>

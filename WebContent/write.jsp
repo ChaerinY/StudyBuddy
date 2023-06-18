@@ -116,7 +116,7 @@
         <div class="container ms-3 mt-5" id="main">
 
             <div class="row">
-				<form method="post" action="writeAction.jsp">
+				<form method="post" action="writeAction.jsp" enctype="multipart/form-data">
 					<div class="post-content">
 						<input type="hidden" name="roomID" value="<%=roomID%>">         <!-- 룸아이디랑 카테고리 안보이게 전달 -->
     					<input type="hidden" name="postType" value="<%=postType%>">
@@ -124,6 +124,9 @@
 						<hr>
 						<input type="text" class="form-control" placeholder="글제목" name="postTitle" maxlength="50">
 						<br>
+						<!-- 파일 첨부 -->
+						<input type="file" class="form-control" name="uploadfile">
+        				<br>
 						<textarea class="form-control" placeholder="내용을 입력하세요." rows="15" name="postContent" maxlength="2000"></textarea>
 						<hr>
 					</div>

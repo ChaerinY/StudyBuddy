@@ -46,8 +46,8 @@ public class CommentDAO {
 	}
 	
 	
-	public int write(int postID, String userID, String userName, String commentContent) { // 댓글 작성
-		String SQL = "INSERT INTO comments values (comment_seq.nextval,?,?,?,?,?)";
+	public int write(int postID, String userID, String userName, String commentContent, String fileName) { // 댓글 작성
+		String SQL = "INSERT INTO comments values (comment_seq.nextval,?,?,?,?,?,?)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, postID);
@@ -55,6 +55,7 @@ public class CommentDAO {
 			pstmt.setString(3,  userName);
 			pstmt.setString(4, getDate());
 			pstmt.setString(5, commentContent);
+			pstmt.setString(6, fileName);
 			
 			return pstmt.executeUpdate();
 		}catch(Exception e) {
@@ -78,6 +79,7 @@ public class CommentDAO {
 				comment.setUserName(rs.getString(4));
 				comment.setCommentDate(rs.getString(5));
 				comment.setCommentContent(rs.getString(6));
+				comment.setFileName(rs.getString(7));
 				list.add(comment);
 			}			
 		} catch(Exception e) {
@@ -100,6 +102,7 @@ public class CommentDAO {
 				comment.setUserName(rs.getString(4));
 				comment.setCommentDate(rs.getString(5));
 				comment.setCommentContent(rs.getString(6));
+				comment.setFileName(rs.getString(7));
 				return comment;
 			}			
 		} catch(Exception e) {
@@ -108,12 +111,13 @@ public class CommentDAO {
 		return null;
 	}
 	
-	public int update(int commentID, String commentContent ) {	// 댓글 수정
-		String SQL="update comments set commentContent = ? where commentID = ?";//특정한 아이디에 해당하는 내용을 바꿔준다. 
+	public int update(int commentID, String commentContent, String fileName ) {	// 댓글 수정
+		String SQL="update comments set commentContent = ?, fileName = ? where commentID = ?";//특정한 아이디에 해당하는 내용을 바꿔준다. 
 		try {
 			PreparedStatement pstmt=conn.prepareStatement(SQL);
 			pstmt.setString(1, commentContent);
-			pstmt.setInt(2, commentID);
+			pstmt.setString(2, fileName);
+			pstmt.setInt(3, commentID);
 			return pstmt.executeUpdate();	
 		} catch(Exception e) {
 			e.printStackTrace();

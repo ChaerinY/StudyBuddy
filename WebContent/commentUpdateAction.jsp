@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ page import="com.oreilly.servlet.*" %>
+<%@ page import="com.oreilly.servlet.MultipartRequest" %>
+<%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
+<%@ page import="java.io.File" %>
 <%@ page import="comment.CommentDAO" %>
 <%@ page import="java.io.PrintWriter" %>  
 <% request.setCharacterEncoding("UTF-8"); %>
@@ -17,6 +21,31 @@
 <body>
 	<%
 		String userID = null;
+	
+	//파일 설정
+	String relativePath = "/upload/";       //상대경로
+	String saveDirectory = request.getServletContext().getRealPath(relativePath);      //getServletContext() -> 루트디렉토리 가져옴
+	
+	// 디렉토리가 존재하는지 확인하고, 없으면 생성
+	File uploadDir = new File(saveDirectory);
+	if (!uploadDir.exists()) {
+	    uploadDir.mkdir();
+	}
+	
+	 int maxPostSize = 10 * 1024 * 1024; // 최대 업로드 파일 크기(10MB로 설정)
+	 String encoding = "UTF-8"; // 인코딩 타입
+	 
+	//form으로부터 값 받아옴
+	MultipartRequest multipartRequest = new MultipartRequest(request, saveDirectory, maxPostSize, encoding, new DefaultFileRenamePolicy());
+	userID = multipartRequest.getParameter("userID");
+	String postID = multipartRequest.getParameter("postID");
+	String commentContent = multipartRequest.getParameter("commentContent");
+	String fileName = multipartRequest.getParameter("prefile");
+	
+	//수정할 파일이 있을 경우에만 변경
+	if(multipartRequest.getFilesystemName("uploadfile")!=null){
+		fileName = multipartRequest.getFilesystemName("uploadfile");
+	}
 		
 		if(session.getAttribute("userID")!= null){      //세션을 확인해서 userID의 세션이 존재하는 회원들은 userID에  세션값을 담을수 있도록
 			userID=(String) session.getAttribute("userID");
@@ -51,14 +80,14 @@
 			script.println("</script>");
 		}
 		
-		if(!userID.equals(comment.getUserID())){
+		if(!userID.equals(userID)){
 			PrintWriter script=response.getWriter();
 			script.println("<script>");
 			script.println("alert('권한이 없습니다.')");
 			script.println("history.back()");
 			script.println("</script>");
 		} else{
-			if(comment.getCommentContent()==null){
+			if(commentContent==null){
 					PrintWriter script=response.getWriter();
 					script.println("<script>");
 					script.println("alert('입력이 안 된 사항이 있습니다.')");
@@ -66,7 +95,7 @@
 					script.println("</script>");
 				}else{
 					CommentDAO commentDAO=new CommentDAO();
-					int result=commentDAO.update(commentID, comment.getCommentContent());
+					int result=commentDAO.update(commentID, commentContent, fileName);
 					if(result == -1){//db 오류
 						PrintWriter script=response.getWriter();
 						script.println("<script>");

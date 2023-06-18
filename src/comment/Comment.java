@@ -15,6 +15,9 @@ public class Comment {
 
 	alter table comments add primary key (commentID);
 	alter table comments add constraint comments foreign key (postID) references posts(postID) on delete cascade;
+	
+	ALTER TABLE comments
+	 	ADD filename VARCHAR2(100);
 	*/
 	
 	private int commentID;
@@ -23,6 +26,7 @@ public class Comment {
 	private String userName;
 	private String commentDate;
 	private String commentContent;
+	private String fileName;
 	
 	public int getCommentID() {
 		return commentID;
@@ -59,5 +63,12 @@ public class Comment {
 	}
 	public void setCommentContent(String commentContent) {
 		this.commentContent = commentContent;
+	}
+	public String getFileName() {
+	    return fileName;
+	}
+
+	public void setFileName(String fileName) {
+	    this.fileName = fileName;
 	}
 }
