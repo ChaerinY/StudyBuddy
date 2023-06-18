@@ -128,12 +128,14 @@
 	                        <tr>
 	                        	<td><input type="text" class="form-control" placeholder="글제목" name="postTitle" maxlength="50" value="<%=post.getPostTitle()%>"></td>
 	                        </tr>
+
+	                        <tr>
+	                        	<td style="height:300px"><textarea class="form-control" placeholder="글내용" name="postContent" maxlength="2048" rows="15"><%=post.getPostContent()%></textarea></td>
+	                        </tr>
+	                        
 	                        <tr>
 	                        	<td><input type="file" class="form-control" name="uploadfile"></td>
 	                        	<input type="hidden" name="prefile" value="<%=post.getFileName()%>">
-	                        </tr>
-	                        <tr>
-	                        	<td><textarea class="form-control" placeholder="글내용" name="postContent" maxlength="2048"><%=post.getPostContent()%></textarea></td>
 	                        </tr>
 	                    </tbody>			
 				</table>

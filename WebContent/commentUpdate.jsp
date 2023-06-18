@@ -55,7 +55,7 @@
 		EnrolDAO enrolDAO = new EnrolDAO();
 		int auth = enrolDAO.getAuth(roomID, userID);
 		
-		if(auth == -1){  // 방장이나 회원만 열람 가능
+		if(auth == -1 && roomID != 0){  // 방장이나 회원만 열람 가능
 			PrintWriter script = response.getWriter();
 			script.println("<script>");
 			script.println("alert('잘못된 접근입니다.')");
@@ -128,17 +128,19 @@
     </header>
 
     <div class="d-flex">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: calc(100vh - 75px);">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: auto;">
             <a href="roomMain.jsp?roomID=<%=room.getRoomID()%>" class="d-flex align-items-center link-dark text-decoration-none" style="margin: 10px;">
                 <span class="fs-4" style="font-weight: bold;"><%=room.getRoomName()%></span>
             </a>
             <hr>
+            <% if(roomID!=0) {  //모집게시판에선 안보이게 %>
             <ul class="nav nav-pills flex-column mb-auto">
             	<li class="nav-item"><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=공지사항" class="nav-link link-dark" aria-current="page">· 공지사항 </a></li>
             	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=과제게시판" class="nav-link link-dark">· 과제게시판 </a></li>
             	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=QnA게시판" class="nav-link link-dark">· Q&A게시판 </a></li>
             	<li><a href="studyBBS.jsp?roomID=<%=roomID%>&postType=자유게시판" class="nav-link link-dark">· 자유게시판 </a></li>
             </ul>
+            <% } %>
         </div>
 
 		<!-- 사이드 바 옆 컨테이너 부분 -->
@@ -159,16 +161,7 @@
 					</div>
 					
 					<div class="text-end">
-					<a href="studyBBS.jsp?roomID=<%=roomID%>&postType=<%=postType%>" class="btn btn-primary"> 목록으로 </a>
 
-					<% 
-						if(userID != null && userID.equals(post.getUserID())) {    //작성자와 현재 로그인한사람이 같으면 수정삭제 버튼출력됨
-							
-					%>
-						<a href="update.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-primary"> 수정 </a>
-						<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="deleteAction.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-primary"> 삭제 </a>
-					<% 		
-						}%>
 						<br><br>
 		<div class="container">
          <div class="row">
@@ -203,7 +196,7 @@
                   						<a href="commentUpdate.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=list.get(i).getCommentID()%>" 
                   						class="btn btn-primary">수정</a>
                   						<a href="commentDeleteAction.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=list.get(i).getCommentID()%>" 
-                  						onclick="return confirm('정말로 삭제하시겠습니까?')" class="btn btn-primary">삭제</a></td>
+                  						onclick="return confirm('정말로 삭제하시겠습니까?')" class="btn btn-secondary">삭제</a></td>
                   					</tr>
                   					<%}}%>
                   				</tbody>
@@ -215,7 +208,7 @@
 		<div class="container">
       		<div class="row">
             	<form method="post" action="commentUpdateAction.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=commentID%>"  enctype="multipart/form-data">
-				<table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
+				<table class="table" style="text-align: center; border: 1px solid #dddddd; background-color: aliceblue;" >
 					<tbody>
 						<input type="hidden" name="userID" value="<%=comment.getUserID()%>">
     					<input type="hidden" name="postID" value="<%=comment.getPostID()%>">
@@ -229,7 +222,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<input type="submit" class="btn btn-success pull-right" value="댓글수정">
+				<input type="submit" class="btn btn-primary" value="댓글 수정" style="margin-bottom:30px;">
 		</form>
       		</div>
    		</div>

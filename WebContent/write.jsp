@@ -123,11 +123,11 @@
 						<h3> 게시판 글쓰기 </h3>
 						<hr>
 						<input type="text" class="form-control" placeholder="글제목" name="postTitle" maxlength="50">
+        				<br>
+						<textarea class="form-control" placeholder="내용을 입력하세요." rows="15" name="postContent" maxlength="2000"></textarea>
 						<br>
 						<!-- 파일 첨부 -->
 						<input type="file" class="form-control" name="uploadfile">
-        				<br>
-						<textarea class="form-control" placeholder="내용을 입력하세요." rows="15" name="postContent" maxlength="2000"></textarea>
 						<hr>
 					</div>
 					<div class="text-end">

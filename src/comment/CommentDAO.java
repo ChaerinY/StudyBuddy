@@ -42,11 +42,11 @@ public class CommentDAO {
 			e.printStackTrace();
 		}
 		
-		return "";   //데이터베이스 오류
+		return "";   //�뜲�씠�꽣踰좎씠�뒪 �삤瑜�
 	}
 	
 	
-	public int write(int postID, String userID, String userName, String commentContent, String fileName) { // 댓글 작성
+	public int write(int postID, String userID, String userName, String commentContent, String fileName) { //댓글 작성
 		String SQL = "INSERT INTO comments values (comment_seq.nextval,?,?,?,?,?,?)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
@@ -85,10 +85,10 @@ public class CommentDAO {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return list;//댓글 리스트 반환
+		return list;//댓글리스트 반환
 	}
 	
-	public Comment getComment(int commentID) {//하나의 댓글 내용을 불러오는 함수
+	public Comment getComment(int commentID) {//하나의 댓글 내용을 가져오는 함수
 		String SQL="SELECT * from comments where commentID = ?";
 		try {
 			pstmt=conn.prepareStatement(SQL);
@@ -112,11 +112,16 @@ public class CommentDAO {
 	}
 	
 	public int update(int commentID, String commentContent, String fileName ) {	// 댓글 수정
-		String SQL="update comments set commentContent = ?, fileName = ? where commentID = ?";//특정한 아이디에 해당하는 내용을 바꿔준다. 
+		String SQL="update comments set commentContent = ?, fileName = ? where commentID = ?";//특정한 아이디에 해당하는 내용을 바꿔준다.
 		try {
 			PreparedStatement pstmt=conn.prepareStatement(SQL);
 			pstmt.setString(1, commentContent);
+			if(fileName.equals("null")) {
+				pstmt.setString(2, ""); // 빈 문자열을 입력
+			}
+			else {
 			pstmt.setString(2, fileName);
+			}
 			pstmt.setInt(3, commentID);
 			return pstmt.executeUpdate();	
 		} catch(Exception e) {
@@ -134,7 +139,7 @@ public class CommentDAO {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return -1;//데이터베이스 오류
+		return -1; //데이터 베이스 오류
 	}
 	
 }

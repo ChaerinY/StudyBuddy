@@ -128,7 +128,7 @@
     </header>
 
     <div class="d-flex">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: calc(100vh - 75px);">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: auto">
             <a href="roomMain.jsp?roomID=<%=room.getRoomID()%>" class="d-flex align-items-center link-dark text-decoration-none" style="margin: 10px;">
                 <span class="fs-4" style="font-weight: bold;"><%=room.getRoomName()%></span>
             </a>
@@ -155,11 +155,12 @@
 						<div style="min-height:150px; white-space: pre-line;">  <!-- 개행 유지 -->
 						<%=post.getPostContent() %>
 						</div>
+						<br>
 						<% if (post.getFileName()!=null){	//파일이 이미지인 경우
 							if(post.getFileName().contains(".png")||post.getFileName().contains(".jpg")){%>
 								<img src="upload/<%=post.getFileName()%>" style="width: 600px;"/>
 							<%}else{%>
-							<h6>[ 첨부파일 ] <a href="./filedownload.jsp?filename=<%=post.getFileName() %>"><%=post.getFileName() %></a></h6>
+							<h6><span style="color:gray; font-weight:bold">[ 첨부파일 ] </span><a href="./filedownload.jsp?filename=<%=post.getFileName() %>"><%=post.getFileName() %></a></h6>
 							<%}} %>
 						<hr>
 					</div>
@@ -209,15 +210,13 @@
 								<img src="upload/<%=list.get(i).getFileName()%>" style="width: 600px;"/>
 							<%}else{%>
 							<br>
-							<h6>[ 첨부파일 ] <a href="./filedownload.jsp?filename=<%=list.get(i).getFileName() %>"><%=list.get(i).getFileName() %></a></h6>
+							<h6><span style="color:gray; font-weight:bold">[ 첨부파일 ] </span><a href="./filedownload.jsp?filename=<%=list.get(i).getFileName() %>"><%=list.get(i).getFileName() %></a></h6>
 							<%}} %>
                   						
                   						</td>
                   						<%
 											if(userID != null && userID.equals(list.get(i).getUserID())){ //해당 댓글이 본인이라면 수정과 삭제가 가능
 										%>
-										
-										
 										
                   						<td align="right">
                   						<a href="commentUpdate.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=list.get(i).getCommentID()%>" 
@@ -231,28 +230,29 @@
                   		</div>
             </div>
       </div>
+      
       <br>
 		<div class="container">
       		<div class="row">
             	<form method="post" action="submitAction.jsp" enctype="multipart/form-data">
-            		<table class="table table-bordered" style="text-align: center; border: 1px solid #dddddd">
+            		<table class="table table-bordered" style="text-align: center; border: 1px solid #dddddd; background-color: aliceblue;" >
                			<tbody>
                   			<tr>
-                     			<td align="left"><%= userName %></td>
+                     			<td align="left">댓글 작성</td>
                   			</tr>
                   			<tr>
                      			<td>
                      			<input type="hidden" name="userName" value="<%=userName%>">
                      			<input type="hidden" name="postID" value="<%=post.getPostID()%>">
                      			<textarea class="form-control" placeholder="댓글 쓰기" style="width: 100%;" name="commentContent" maxlength="100"></textarea>
-                     			<br>
+                     			
                      			<!-- 파일 첨부 -->
-                     			<input type="file" class="form-control" name="uploadfile">
+                     			<input type="file" class="form-control" name="uploadfile" style="margin-top:10px;">
                      			</td>
                   			</tr>
                			</tbody>
             		</table>
-            		<input type="submit" class="btn btn-primary" value="댓글 쓰기">
+            		<input type="submit" class="btn btn-primary" value="댓글 쓰기" style="margin-bottom:30px;">
             	</form>
       		</div>
    		</div>

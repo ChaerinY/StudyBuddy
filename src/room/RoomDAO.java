@@ -112,37 +112,6 @@ public ArrayList<Room> getMyList(String userID) {
 	return list;
 }
 
-// searchRoom대신 getroom으로 수정
-
-//public ArrayList<Room> searchRoom(Integer roomID) {
-//	
-//	String SQL = "SELECT * FROM room where roomid=?"; 
-//	ArrayList<Room> list = new ArrayList<Room>();
-//	
-//	try {
-//		
-//		PreparedStatement pstmt = conn.prepareStatement(SQL);
-//		pstmt.setInt(1, roomID);
-//		
-//		rs = pstmt.executeQuery();
-//		
-//		while (rs.next()) {
-//			
-//			Room room = new Room();
-//			
-//			room.setRoomID(rs.getInt(1));
-//			room.setHostID(rs.getString(2));
-//			room.setRoomName(rs.getString(3));
-//			room.setRoomContent(rs.getString(4));
-//			room.setMaximum(rs.getInt(5));
-//			list.add(room);
-//		}
-//		
-//	} catch (Exception e) {
-//		e.printStackTrace();
-//	}
-//	return list;
-//}
 
 public Room getRoom(int roomID){
 	
@@ -191,7 +160,7 @@ public boolean checkExists(int roomID) {
 	return false;
 }
 
-public int maxMemberNum(int roomID) {        //해당 스터디룸의 최대인원수 리턴
+public int maxMemberNum(int roomID) {        //해당 스터디룸의 최대 인원수 리턴
 	
 	String SQL = "SELECT maximum FROM room WHERE roomID=?";    
 	

@@ -32,7 +32,8 @@ create table posts (
     postContent NVARCHAR2(2000),   
     postDate VARCHAR(20),
     userName VARCHAR(20), 
-    postIndex INT        
+    postIndex INT,
+    filename varchar2(100)        
 	); 
     
 
@@ -59,7 +60,8 @@ create table comments(
     userID varchar2(20 byte) not null,
     userName varchar2(20 byte) not null,
     commentDate varchar(20),
-    commentContent NVARCHAR2(100)
+    commentContent NVARCHAR2(100),
+    filename varchar2(100)
 	);
 
 CREATE SEQUENCE post_seq;
@@ -71,3 +73,9 @@ alter table comments add constraint comments foreign key (postID) references pos
 alter table enrol add constraint room foreign key (roomID) references room(roomID) on delete cascade;
 alter table posts add constraint room2 foreign key (roomID) references room(roomID) on delete cascade;
 
+
+/* 모집게시판 레코드 생성 필요*/
+INSERT INTO room (roomID, hostID, roomName, roomContent, maximum, filename) 
+VALUES (0, '관리자', '모집게시판', '모집게시판입니다.', 0, 'none');
+
+commit;   /*insert문 커밋해야 웹에 적용됨*/

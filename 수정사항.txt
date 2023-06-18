@@ -196,3 +196,52 @@ Root directory: D:\school\InternetDB\projects\.metadata\.plugins\org.eclipse.wst
 
 2. searchBBS.jsp 136~153line
 검색버튼 추가
+
+
+----------------------------------------------------
+20230618 수정
+
+1. UI 다듬기
+룸 메인부분 탈퇴하기 버튼 간격 추가
+글쓰기란 파일첨부부분 아래로
+댓글작성 파일선택란 간격이 넓은거 같아 줄임
+댓글리스트란과 댓글작성란 ui 일부 변경 
+첨부파일 간격/폰트 수정
+마이스터디 스터디룸 리스트 ui수정(이미지 표시 등등)
+
+
+2. 모집게시판에서 글작성시 오류
+"ORA-02291: integrity constraint violated - parent key not found" 오류. 외래 키 제약 조건이 위반
+(모집게시판이 0번 room으로 취급되는데 room 테이블에 모집게시판 레코드가 없어서 위반되는거 같음)
+->
+INSERT INTO room (roomID, hostID, roomName, roomContent, maximum, filename) 
+VALUES (0, '관리자', '모집게시판', '모집게시판입니다.', 0, 'none');
+모집게시판을 0번 룸 레코드로 추가하면 오류x (오라클 쿼리문 파일에 추가완료)
+
+
+3. 모집게시판 부분에 파일첨부와 댓글기능이 없길래 추가, 따라서 아래 파일들 수정
+recruit_view.jsp
+156라인 아래> 댓글리스트와 댓글작성란 추가
+
+commentupdate.jsp  
+58라인 if문 > 모집게시판은 권한상관x
+136라인> 모집게시판에서는 안보이게
+
+commentupdateAction.jsp
+106라인 부근> 모집게시판댓글은 모집게시판으로 이동
+
+commnentDeleteAction.jsp
+위와 동일(모집게시판으로 이동)
+
+
+4. 첨부파일이 없는 댓글 수정시 첨부파일이 없는 걸로 표시되는 것이 아닌
+첨부파일: null으로 표시되는 문제 
+-> commentDAO.java update if문 추가
+
+
+5. 게시글뷰에서 스크롤이 생길시 사이드바 하단부분이 끊기는 문제 -> height값 수정 완료
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: auto;">
+
+
+6. .java 파일 주석이 깨져있어서ㅠㅠ 고쳤습니다
+

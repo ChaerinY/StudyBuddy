@@ -134,31 +134,35 @@
 
 			<div class="container">
 				<div class="row">
-					<table class="table"
-						style="text-align: center; border: 1px solid #dddddd">
-						<thead>
-							<tr>
-								<th style="background-color: #eeeeee; text-align: center;">ID
-								</th>
-								<th style="background-color: #eeeeee; text-align: center;">스터디룸
-								</th>
-								<th style="background-color: #eeeeee; text-align: center;">소개
-								</th>
-							</tr>
-						</thead>
-						<tbody id="room-list">
+						<div id="room-list">
 							<% RoomDAO roomDAO=new RoomDAO(); 
 							ArrayList<Room> list =roomDAO.getMyList(userID);
                                   for (int i = 0; i < list.size(); i++){ %>
-							<tr>
-								<td><%= list.get(i).getRoomID()%></td>
-								<td><a href="roomMain.jsp?roomID=<%= list.get(i).getRoomID()%>"><%= list.get(i).getRoomName()%></a></td>      <!-- href수정. roomMain.jsp?roomID= -->
-								<td><%= list.get(i).getRoomContent()%></td>
-							</tr>
+                                  <div style="display: flex; width: 100%; margin-bottom: 20px;">
+								    <!-- 왼쪽 이미지 -->
+								    <div style="width: 10%; padding-right: 20px;">
+								        <img src="upload/<%=list.get(i).getFileName()%>" style="width: 100px; height: 100px;" alt="로고이미지" />
+								    </div>
+								    
+								    <!-- 오른쪽 내용 -->
+								    <div style="width: 90%;">
+								        <!-- 룸 이름 및 아이디 -->
+								        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+								            <h2><a style="text-decoration: none; font-size:15pt" href="roomMain.jsp?roomID=<%= list.get(i).getRoomID()%>"><%= list.get(i).getRoomName()%></a></h2>
+								            <p>스터디룸ID: <%= list.get(i).getRoomID()%></p>
+								        </div>
+								        
+								        <!-- 룸 설명 -->
+								        <div>
+								            <p><%= list.get(i).getRoomContent()%></p>
+								        </div>
+								    </div>
+								</div>
+								<hr>
+								                                  
 							<% } %>
 
-						</tbody>
-					</table>
+						</div>
 
 				</div>
 

@@ -131,8 +131,10 @@
 
             <div class="bg-light p-5 rounded mt-3">
             		<h2 style="text-align: left;"> <%=room.getRoomName()%> </h2>
-            		<p class="lead"><%=room.getRoomContent()%></p>
+            		<br>
+            		<p style="white-space: pre-line;"><%=room.getRoomContent()%></p>
             </div>
+            <br>
 					
 			<% if(auth == 0){%>
 			<div class="d-flex justify-content-end">

@@ -4,7 +4,15 @@
 <%@ page import="java.io.PrintWriter" %>
 <%@ page import="post.PostDAO" %>  
 <%@ page import="post.Post" %>
+<%@ page import="room.RoomDAO" %>  
+<%@ page import="room.Room" %>
+<%@ page import="comment.CommentDAO" %>
+<%@ page import="comment.Comment" %>
+<%@ page import="enrol.EnrolDAO" %>
+<%@ page import="user.UserDAO" %>
 <%@ page import="java.util.ArrayList" %>    
+
+<% request.setCharacterEncoding("UTF-8"); %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -102,7 +110,7 @@
     </header>
 
     <div class="d-flex">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: calc(100vh - 75px);">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: auto;">
             <a href="recruitBBS.jsp" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none" style="padding: 20px;">
                 <span class="fs-4">모집게시판</span>
             </a>
@@ -122,6 +130,13 @@
 						<div style="min-height:150px; white-space: pre-line;">  <!-- 개행 유지 -->
 						<%=post.getPostContent() %>
 						</div>
+						<br>
+							<% if (post.getFileName()!=null){	//파일이 이미지인 경우
+							if(post.getFileName().contains(".png")||post.getFileName().contains(".jpg")){%>
+								<img src="upload/<%=post.getFileName()%>" style="width: 600px;"/>
+							<%}else{%>
+							<h6><span style="color:gray; font-weight:bold">[ 첨부파일 ] </span><a href="./filedownload.jsp?filename=<%=post.getFileName() %>"><%=post.getFileName() %></a></h6>
+							<%}} %>
 						<hr>
 					</div>
 					
@@ -133,13 +148,94 @@
 							
 					%>
 						<a href="update.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-primary"> 수정 </a>
-						<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="deleteAction.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-primary"> 삭제 </a>
+						<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="deleteAction.jsp?roomID=<%=roomID%>&postType=<%=postType%>&postIndex=<%=postIndex%>" class="btn btn-secondary"> 삭제 </a>
 					<% 		
 						}
 					
 					%>
+					<br><br>
+		<div class="container">
+         <div class="row">
+            <table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
+               <tbody>
+               		<tr>
+                  		<td align="left" bgcolor="skyblue">댓글</td>
+               		</tr>
+		       </tbody>
+               </table>
+           </div>
+           <div class="container">
+                  		<div class="row">
+                  			<table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">                  	
+                  				<tbody>
+                  				<%
+                     				CommentDAO commentDAO = new CommentDAO();
+                     				ArrayList<Comment> list = commentDAO.getList(post.getPostID());
+                     				for(int i=0; i<list.size(); i++){	%>
+                  					
+                  					<tr>
+                  						<td align="left"><%= list.get(i).getUserName() %></td>
+                  						<td align="right"><%= list.get(i).getCommentDate() %></td>
+                  					</tr>
+                  		
+                  					<tr>
+                  						<td align="left"><div style="white-space: pre-line;"><%= list.get(i).getCommentContent() %></div>
+                  						
+                  						
+                  						<% if (list.get(i).getFileName()!=null){	//파일이 이미지인 경우
+							if(list.get(i).getFileName().contains(".png")||list.get(i).getFileName().contains(".jpg")){%>
+								<img src="upload/<%=list.get(i).getFileName()%>" style="width: 600px;"/>
+							<%}else{%>
+							<br>
+							<h6><span style="color:gray; font-weight:bold">[ 첨부파일 ] </span><a href="./filedownload.jsp?filename=<%=list.get(i).getFileName() %>"><%=list.get(i).getFileName() %></a></h6>
+							<%}} %>
+                  						
+                  						</td>
+                  						<%
+											if(userID != null && userID.equals(list.get(i).getUserID())){ //해당 댓글이 본인이라면 수정과 삭제가 가능
+										%>
+										
+                  						<td align="right">
+                  						<a href="commentUpdate.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=list.get(i).getCommentID()%>" 
+                  						class="btn btn-primary">수정</a>
+                  						<a href="commentDeleteAction.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=list.get(i).getCommentID()%>" 
+                  						onclick="return confirm('정말로 삭제하시겠습니까?')" class="btn btn-secondary">삭제</a></td>
+                  					</tr>
+                  					<%}}%>
+                  				</tbody>
+                  			</table>
+                  		</div>
+            </div>
+      </div>
+      
+      <br>
+		<div class="container">
+      		<div class="row">
+            	<form method="post" action="submitAction.jsp" enctype="multipart/form-data">
+            		<table class="table table-bordered" style="text-align: center; border: 1px solid #dddddd; background-color: aliceblue;"" >
+               			<tbody>
+                  			<tr>
+                     			<td align="left">댓글 작성</td>
+                  			</tr>
+                  			<tr>
+                     			<td>
+                     			<input type="hidden" name="userName" value="<%=userName%>">
+                     			<input type="hidden" name="postID" value="<%=post.getPostID()%>">
+                     			<textarea class="form-control" placeholder="댓글 쓰기" style="width: 100%;" name="commentContent" maxlength="100"></textarea>
+                     			
+                     			<!-- 파일 첨부 -->
+                     			<input type="file" class="form-control" name="uploadfile" style="margin-top:10px;">
+                     			</td>
+                  			</tr>
+               			</tbody>
+            		</table>
+            		<input type="submit" class="btn btn-primary" value="댓글 쓰기" style="margin-bottom:30px;">
+            	</form>
+      		</div>
+   		</div>
 					</div>
 			</div>
+
         </div>
     </div>
 

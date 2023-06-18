@@ -61,7 +61,7 @@
             	<h5 class="card-title" id="exampleModalLabel">스터디룸ID로 찾기</h5>
         	</div>
                 <div class="card-body">
-                  <h6>스터디룸ID: <%=searchid %></h6>
+                  <h6 style="font-weight:bold">스터디룸ID: <%=searchid %></h6>
                   <div class="d-flex">
                   	<% if(rs!=null && searchid!=0 ){ %>               <!-- search room에서 getroom으로 바뀜에 따라 수정, 0은 모집게시판이므로 검색에서 제외 -->
                     <img src="upload/<%= rs.getFileName()%>" alt="Image" style="width: 200px; height: 200px; margin-right: 20px;"/>
@@ -83,11 +83,11 @@
                 </div>
                 <div class="card-footer bg-transparent d-flex justify-content-end align-items-center">
                 <% if(rs!=null){ %>               <!-- search room에서 getroom으로 바뀜에 따라 수정 -->
-                    <p style="color: rgb(27, 67, 197); margin-right: 10px;">가입하시겠습니까?</p>
+                    <p style="color: rgb(27, 67, 197); margin-right: 15px; margin-top:13px">가입하시겠습니까?</p>
                   <button type="button" class="btn btn-secondary" onclick="goBack()">뒤로가기</button>
                    
                    <form method="post" action="enrolAction.jsp?roomid=<%=searchid%>">
-	                  <button type="submit" class="btn btn-primary">
+	                  <button type="submit" class="btn btn-primary" style="margin-left:5px">
 	                  	가입하기</a>
 	                  </button>
 	               </form>

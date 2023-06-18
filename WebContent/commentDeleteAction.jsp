@@ -55,10 +55,19 @@
 					script.println("</script>");
 				}
 				else{
-					PrintWriter script=response.getWriter();
-					script.println("<script>");
-					script.println("location.href='study_View.jsp?postIndex="+postIndex+"&roomID="+roomID+"&postType="+postType+"'");
-					script.println("</script>");
+					
+					if (roomID==0){   //모집게시판이면
+						PrintWriter script = response.getWriter();
+						script.println("<script>");
+						script.println("location.href = 'recruit_view.jsp?postIndex="+postIndex+"&roomID="+roomID+"&postType="+postType+"'");  //모집게시판으로 이동
+						script.println("</script>");
+					}
+					else {     //그외 스터디룸 게시판이면
+						PrintWriter script=response.getWriter();
+						script.println("<script>");
+						script.println("location.href='study_View.jsp?postIndex="+postIndex+"&roomID="+roomID+"&postType="+postType+"'");
+						script.println("</script>");
+					}
 				}
 		}
 		
