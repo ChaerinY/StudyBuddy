@@ -113,7 +113,7 @@
         <div class="container ms-3 mt-5" id="main">
 
             <div class="row">
-				<form method="post" action="updateAction.jsp">
+				<form method="post" action="updateAction.jsp" enctype="multipart/form-data">
 				<table class="table" style="text-align:center; border: 1px solid #dddddd">
 						<thead>
 	                        <tr>
@@ -127,6 +127,10 @@
 	                        <!-- 게시글양식이 들어갈 부분 -->
 	                        <tr>
 	                        	<td><input type="text" class="form-control" placeholder="글제목" name="postTitle" maxlength="50" value="<%=post.getPostTitle()%>"></td>
+	                        </tr>
+	                        <tr>
+	                        	<td><input type="file" class="form-control" name="uploadfile"></td>
+	                        	<input type="hidden" name="prefile" value="<%=post.getFileName()%>">
 	                        </tr>
 	                        <tr>
 	                        	<td><textarea class="form-control" placeholder="글내용" name="postContent" maxlength="2048"><%=post.getPostContent()%></textarea></td>

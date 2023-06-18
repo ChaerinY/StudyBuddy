@@ -14,6 +14,9 @@ public class Post {
     userName VARCHAR(20),    // 작성자란에 id대신 닉네임 표시하기위해
     postIndex INT          //각게시판 안에서의 인덱스
 	); 
+	
+	ALTER TABLE posts
+	 	ADD filename VARCHAR2(100);
 	 */
 	
 	private int postID;
@@ -25,6 +28,7 @@ public class Post {
     private String postDate;
     private String userName;
     private int postIndex;
+    private String fileName;
     
 	public int getPostID() {
 		return postID;
@@ -79,6 +83,13 @@ public class Post {
 	}
 	public void setPostIndex(int postIndex) {
 		this.postIndex = postIndex;
+	}
+	public String getFileName() {
+	    return fileName;
+	}
+
+	public void setFileName(String fileName) {
+	    this.fileName = fileName;
 	}
     
 }

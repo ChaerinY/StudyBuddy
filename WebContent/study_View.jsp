@@ -155,6 +155,12 @@
 						<div style="min-height:150px; white-space: pre-line;">  <!-- 개행 유지 -->
 						<%=post.getPostContent() %>
 						</div>
+						<% if (post.getFileName()!=null){	//파일이 이미지인 경우
+							if(post.getFileName().contains(".png")||post.getFileName().contains(".jpg")){%>
+								<img src="upload/<%=post.getFileName()%>" style="width: 600px;"/>
+							<%}else{%>
+							<h6>[ 첨부파일 ] <a href="./filedownload.jsp?filename=<%=post.getFileName() %>"><%=post.getFileName() %></a></h6>
+							<%}} %>
 						<hr>
 					</div>
 					
@@ -195,10 +201,24 @@
                   					</tr>
                   		
                   					<tr>
-                  						<td align="left"><div style="white-space: pre-line;"><%= list.get(i).getCommentContent() %></div></td>
+                  						<td align="left"><div style="white-space: pre-line;"><%= list.get(i).getCommentContent() %></div>
+                  						
+                  						
+                  						<% if (list.get(i).getFileName()!=null){	//파일이 이미지인 경우
+							if(list.get(i).getFileName().contains(".png")||list.get(i).getFileName().contains(".jpg")){%>
+								<img src="upload/<%=list.get(i).getFileName()%>" style="width: 600px;"/>
+							<%}else{%>
+							<br>
+							<h6>[ 첨부파일 ] <a href="./filedownload.jsp?filename=<%=list.get(i).getFileName() %>"><%=list.get(i).getFileName() %></a></h6>
+							<%}} %>
+                  						
+                  						</td>
                   						<%
 											if(userID != null && userID.equals(list.get(i).getUserID())){ //해당 댓글이 본인이라면 수정과 삭제가 가능
 										%>
+										
+										
+										
                   						<td align="right">
                   						<a href="commentUpdate.jsp?postIndex=<%=postIndex%>&roomID=<%=roomID%>&postType=<%=postType%>&commentID=<%=list.get(i).getCommentID()%>" 
                   						class="btn btn-primary">수정</a>
@@ -214,7 +234,7 @@
       <br>
 		<div class="container">
       		<div class="row">
-            	<form method="post" action="submitAction.jsp">
+            	<form method="post" action="submitAction.jsp" enctype="multipart/form-data">
             		<table class="table table-bordered" style="text-align: center; border: 1px solid #dddddd">
                			<tbody>
                   			<tr>
@@ -225,6 +245,9 @@
                      			<input type="hidden" name="userName" value="<%=userName%>">
                      			<input type="hidden" name="postID" value="<%=post.getPostID()%>">
                      			<textarea class="form-control" placeholder="댓글 쓰기" style="width: 100%;" name="commentContent" maxlength="100"></textarea>
+                     			<br>
+                     			<!-- 파일 첨부 -->
+                     			<input type="file" class="form-control" name="uploadfile">
                      			</td>
                   			</tr>
                			</tbody>

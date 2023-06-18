@@ -70,10 +70,11 @@ public class PostDAO {
 		return -1;   //데이터베이스 오류
 	}
 	
-	public int write(int roomID, String postType, String postTitle, String userID, String postContent, String userName) {    
+	//파일 항목 추가
+	public int write(int roomID, String postType, String postTitle, String userID, String postContent, String userName, String fileName) {    
 		
-		// postid, roomid, userid, posttype, title, content, date, username, postindex 순으로 삽입
-		String SQL = "INSERT INTO posts VALUES (post_seq.nextval,?,?,?,?,?,?,?,?)";  
+		// postid, roomid, userid, posttype, title, content, date, username, postindex, filename 순으로 삽입
+		String SQL = "INSERT INTO posts VALUES (post_seq.nextval,?,?,?,?,?,?,?,?,?)";  
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, roomID);
@@ -85,6 +86,7 @@ public class PostDAO {
 			pstmt.setString(6, getDate());
 			pstmt.setString(7, userName);
 			pstmt.setInt(8, getNext(roomID, postType));
+			pstmt.setString(9, fileName);
 			
 			return pstmt.executeUpdate();
 			
@@ -124,6 +126,8 @@ public class PostDAO {
 				post.setPostDate(rs.getString(7));
 				post.setUserName(rs.getString(8));
 				post.setPostIndex(rs.getInt(9));
+				post.setFileName(rs.getString(10));
+				
 				
 				list.add(post);
 			}
@@ -182,6 +186,7 @@ public class PostDAO {
 				post.setPostDate(rs.getString(7));
 				post.setUserName(rs.getString(8));
 				post.setPostIndex(rs.getInt(9));
+				post.setFileName(rs.getString(10));
 				
 				return post;
 			}
@@ -221,7 +226,7 @@ public class PostDAO {
 				post.setPostDate(rs.getString(7));
 				post.setUserName(rs.getString(8));
 				post.setPostIndex(rs.getInt(9));
-				
+				post.setFileName(rs.getString(10));
 				list.add(post);
 			}
 			
@@ -231,17 +236,19 @@ public class PostDAO {
 		return list;
 	}
 	
-	public int update(int roomID, String postType, int postIndex, String postTitle, String postContent) {    
+	public int update(int roomID, String postType, int postIndex, String postTitle, String postContent, String fileName) {    
 		
-		String SQL = "UPDATE posts SET postTitle=? , postContent=? WHERE roomID=? AND postType=? AND postIndex=?";  
+		String SQL = "UPDATE posts SET postTitle=? , postContent=?, fileName=? WHERE roomID=? AND postType=? AND postIndex=?";  
 		try {
 			
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, postTitle);
 			pstmt.setString(2, postContent);
-			pstmt.setInt(3, roomID);
-			pstmt.setString(4, postType);
-			pstmt.setInt(5, postIndex);
+			pstmt.setString(3, fileName);
+			pstmt.setInt(4, roomID);
+			pstmt.setString(5, postType);
+			pstmt.setInt(6, postIndex);
+			
 			
 			return pstmt.executeUpdate();
 			

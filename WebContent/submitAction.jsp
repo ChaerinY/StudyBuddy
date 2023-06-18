@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+<%@ page import="com.oreilly.servlet.*" %>
+<%@ page import="com.oreilly.servlet.MultipartRequest" %>
+<%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
+<%@ page import="java.io.File" %>
 <%@ page import="comment.CommentDAO" %>
 <%@ page import="java.io.PrintWriter" %>
 <% request.setCharacterEncoding("UTF-8"); %>
@@ -20,6 +23,26 @@
 	
 	String userID = null;
 	
+	
+	//파일 설정
+	String relativePath = "/upload/";       //상대경로
+	String saveDirectory = request.getServletContext().getRealPath(relativePath);      //getServletContext() -> 루트디렉토리 가져옴
+		
+	// 디렉토리가 존재하는지 확인하고, 없으면 생성
+	File uploadDir = new File(saveDirectory);
+	if (!uploadDir.exists()) {
+	    uploadDir.mkdir();
+	}
+		
+	int maxPostSize = 10 * 1024 * 1024; // 최대 업로드 파일 크기(10MB로 설정)
+	String encoding = "UTF-8"; // 인코딩 타입
+		 
+	//form으로부터 값 받아옴
+	MultipartRequest multipartRequest = new MultipartRequest(request, saveDirectory, maxPostSize, encoding, new DefaultFileRenamePolicy());
+	String userName = multipartRequest.getParameter("userName");
+	String commentContent = multipartRequest.getParameter("commentContent");
+	String fileName = multipartRequest.getFilesystemName("uploadfile");
+
 	if(session.getAttribute("userID")!= null){      //세션을 확인해서 userid의 세션이 존재하는 회원들은 userID에  세션값을 담을수 있도록
 		userID=(String) session.getAttribute("userID");
 	}
@@ -33,8 +56,8 @@
 	}
 	
 	int postID = 0;
-	if(comment.getPostID()!= 0){
-		postID = comment.getPostID();
+	if(Integer.parseInt(multipartRequest.getParameter("postID"))!= 0){
+		postID = Integer.parseInt(multipartRequest.getParameter("postID"));
 	}
 		
 		
@@ -46,7 +69,7 @@
          script.println("</script>");
 	}
 	
-	if(comment.getCommentContent() == null){
+	if(commentContent == null){
 		 PrintWriter script = response.getWriter();
          script.println("<script>");
          script.println("alert('입력되지 않은 사항이 있습니다.')");
@@ -55,7 +78,7 @@
 	}else{
 		
 		CommentDAO commentDAO = new CommentDAO();
-        int result = commentDAO.write(postID, userID, comment.getUserName(), comment.getCommentContent());
+        int result = commentDAO.write(postID, userID, userName, commentContent, fileName);
         
         if (result == -1){
            PrintWriter script = response.getWriter();
