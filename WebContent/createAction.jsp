@@ -50,6 +50,10 @@
 	Integer Maximum =  Integer.parseInt(multipartRequest.getParameter("maximum"));
 	String fileName = multipartRequest.getFilesystemName("imgfile");
 
+    // 만약 사용자가 파일을 선택하지 않았다면, 디폴트 이미지 이름을 사용
+    if (fileName == null || fileName.isEmpty()) {
+        fileName = "stdbd_empty_image.png";
+    }
 	
 	if(session.getAttribute("userID")!= null){      //세션을 확인해서 userid의 세션이 존재하는 회원들은 userID에  세션값을 담을수 있도록
 		userID=(String) session.getAttribute("userID");
