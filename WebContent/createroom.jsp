@@ -70,7 +70,7 @@
           <br>
 
           <p>이미지 등록</p>
-        	<img id="preview" src="img/empty_image.png" alt="Image preview" style="width: 200px; height: 200px;"/>
+        	<img id="preview" src="upload/stdbd_empty_image.png" alt="Image preview" style="width: 200px; height: 200px;"/>
         	<br>
         	<input type="file" class="form-control" name="imgfile" id="imageUpload" style="width: 400px;" accept="image/*">
         	<br>
