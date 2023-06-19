@@ -112,7 +112,7 @@ public class CommentDAO {
 	}
 	
 	public int update(int commentID, String commentContent, String fileName ) {	// 댓글 수정
-		String SQL="update comments set commentContent = ?, fileName = ? where commentID = ?";//특정한 아이디에 해당하는 내용을 바꿔준다.
+		String SQL="update comments set commentContent = ?, fileName = ?, commentDate = ? where commentID = ?";//특정한 아이디에 해당하는 내용을 바꿔준다.
 		try {
 			PreparedStatement pstmt=conn.prepareStatement(SQL);
 			pstmt.setString(1, commentContent);
@@ -122,7 +122,8 @@ public class CommentDAO {
 			else {
 			pstmt.setString(2, fileName);
 			}
-			pstmt.setInt(3, commentID);
+			pstmt.setString(3, getDate());
+			pstmt.setInt(4, commentID);
 			return pstmt.executeUpdate();	
 		} catch(Exception e) {
 			e.printStackTrace();
