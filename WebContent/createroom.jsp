@@ -69,9 +69,8 @@
           <textarea class="form-control" placeholder="간단한 소갯말을 입력하세요." style="width: 400px;" name="roomContent" maxlength="2000"></textarea>
           <br>
 
-		<!-- 미구현 -->
           <p>이미지 등록</p>
-        	<img id="preview" src="img/wig_blue.png" alt="Image preview" style="width: 200px; height: 200px;"/>
+        	<img id="preview" src="img/empty_image.png" alt="Image preview" style="width: 200px; height: 200px;"/>
         	<br>
         	<input type="file" class="form-control" name="imgfile" id="imageUpload" style="width: 400px;" accept="image/*">
         	<br>
